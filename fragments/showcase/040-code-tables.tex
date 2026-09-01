@@ -1,0 +1,35 @@
+\section{Code, tables, and citations}
+
+\begin{codebox}[title={Binary search}]{python}
+def binary_search(values, target):
+    low, high = 0, len(values) - 1
+    while low <= high:
+        middle = (low + high) // 2
+        if values[middle] == target:
+            return middle
+        if values[middle] < target:
+            low = middle + 1
+        else:
+            high = middle - 1
+    return None
+\end{codebox}
+
+\par\addvspace{0.8\baselineskip}
+\begin{table}[H]
+  \centering
+  \caption{Asymptotic costs of common search operations.}
+  \label{tab:complexity}
+  \begingroup
+  \tagpdfsetup{table/header-rows={1}}
+  \begin{tabular}{@{}lll@{}}
+    \textbf{Method} & \textbf{Prerequisite} & \textbf{Worst case} \\[0.35em]
+    Linear search & None & $\Theta(n)$ \\
+    Binary search & Sorted input & $\Theta(\log n)$ \\
+    Hash lookup & Suitable hash table & $\Theta(n)$ \\
+  \end{tabular}
+  \endgroup
+\end{table}
+\par\addvspace{0.8\baselineskip}
+
+\Cref{tab:complexity} uses spacing rather than decorative rules or vertical separators.
+Bibliographic citations use BibTeX and Natbib; for example, see \citet{knuth1984literate}.

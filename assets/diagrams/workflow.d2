@@ -1,0 +1,12 @@
+...@_theme
+
+direction: down
+
+source: problem fragments { class: node }
+tex: pdflatex { class: accent }
+checks: validation { class: accent }
+pdf: homework.pdf { class: ok }
+
+source -> tex: make { class: edge }
+tex -> checks: inspect { class: edge }
+checks -> pdf: submit { class: edge }

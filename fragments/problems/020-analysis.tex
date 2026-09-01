@@ -1,0 +1,18 @@
+\begin{problem}[5 points]{Complexity analysis}
+  The following algorithm performs a linear search.
+  State its worst-case running time and justify your answer.
+
+  \begin{codebox}[title={Algorithm 1: Linear search}]{python}
+def locate(values, target):
+    for index, value in enumerate(values):
+        if value == target:
+            return index
+    return None
+  \end{codebox}
+
+  \begin{solution}
+    In the worst case, the algorithm inspects every element exactly once.
+    Its running time is therefore $\Theta(n)$ and its auxiliary space usage is $\Theta(1)$.
+    The source and explanation are kept together following the general literate-programming principle described by \citet{knuth1984literate}.
+  \end{solution}
+\end{problem}

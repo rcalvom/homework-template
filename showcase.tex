@@ -1,0 +1,30 @@
+\DocumentMetadata{
+  lang=en-US,
+  pdfstandard=ua-2,
+  testphase={phase-III,title,table}
+}
+\documentclass[letterpaper,11pt]{article}
+
+\input{fragments/showcase/metadata}
+\usepackage{theme/ricardo-homework}
+
+\hypersetup{
+  pdftitle={Homework Template Showcase},
+  pdfauthor={homework-template},
+  pdfsubject={Component catalogue for homework-template},
+  pdfkeywords={LaTeX, homework, template, showcase}
+}
+
+\begin{document}
+
+\makehomeworktitle
+
+\input{fragments/showcase/010-problems}
+\input{fragments/showcase/020-mathematics}
+\input{fragments/showcase/030-media}
+\input{fragments/showcase/040-code-tables}
+
+\bibliographystyle{plainnat}
+\bibliography{references}
+
+\end{document}

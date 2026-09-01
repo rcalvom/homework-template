@@ -1,0 +1,37 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{theme/ricardo-code}[2026/08/31 Homework code blocks]
+
+\RequirePackage{minted}
+\RequirePackage{xparse}
+\tcbuselibrary{minted}
+
+% The monochrome lexer style keeps every token readable on paper; the box
+% carries the template's visual accent.
+\usemintedstyle{bw}
+
+\NewTCBListing{codebox}{O{} m}{%
+  enhanced,
+  breakable,
+  listing engine=minted,
+  minted language=#2,
+  minted options={
+    fontsize=\small,
+    breaklines,
+    autogobble,
+    tabsize=2
+  },
+  listing only,
+  colback=rzsurface,
+  colframe=rzline,
+  coltitle=white,
+  fonttitle=\bfseries,
+  boxrule=0.6pt,
+  arc=0pt,
+  left=5pt,
+  right=5pt,
+  top=5pt,
+  bottom=5pt,
+  before skip=0.9\baselineskip,
+  after skip=0.9\baselineskip,
+  #1
+}

@@ -1,0 +1,68 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{theme/ricardo-boxes}[2026/08/31 Homework boxes]
+
+\RequirePackage[most]{tcolorbox}
+\RequirePackage{xparse}
+
+\newcounter{problem}
+\renewcommand{\theproblem}{\arabic{problem}}
+\crefname{problem}{problem}{problems}
+\Crefname{problem}{Problem}{Problems}
+
+\NewDocumentEnvironment{problem}{O{} m}{%
+  \refstepcounter{problem}%
+  \ifnum\value{section}=0
+    \section*{Problem~\theproblem: #2}%
+  \else
+    \subsection*{Problem~\theproblem: #2}%
+  \fi
+  \ifstrempty{#1}{}{\noindent\hfill\textit{#1}\par\smallskip}%
+  \ignorespaces
+}{%
+  \par\addvspace{0.8\baselineskip}%
+}
+
+\NewDocumentEnvironment{solution}{}{%
+  \begin{tcolorbox}[
+    enhanced,
+    breakable,
+    colback=rzaccentsoft,
+    colframe=rzline,
+    coltitle=white,
+    fonttitle=\bfseries,
+    boxrule=0.5pt,
+    arc=0pt,
+    left=7pt,
+    right=7pt,
+    top=6pt,
+    bottom=6pt,
+    before skip=0.9\baselineskip,
+    after skip=0.9\baselineskip,
+    title={Solution}
+  ]
+}{%
+  \end{tcolorbox}
+}
+
+\NewDocumentEnvironment{answer}{}{%
+  \begin{tcolorbox}[
+    enhanced,
+    breakable,
+    colback=white,
+    colframe=rzsuccess,
+    borderline west={2pt}{0pt}{rzsuccess},
+    boxrule=0.5pt,
+    arc=0pt,
+    left=8pt,
+    right=8pt,
+    top=6pt,
+    bottom=6pt,
+    before skip=0.8\baselineskip,
+    after skip=0.8\baselineskip,
+    title={Final answer},
+    coltitle=white,
+    fonttitle=\bfseries
+  ]
+}{%
+  \end{tcolorbox}
+}

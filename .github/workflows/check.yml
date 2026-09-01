@@ -1,0 +1,56 @@
+name: check
+
+permissions:
+  contents: read
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build-and-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Make room for TeX Live
+        run: |
+          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc \
+                      /usr/local/share/boost "$AGENT_TOOLSDIRECTORY"
+
+      - uses: docker/setup-buildx-action@v3
+
+      - name: Build reference image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          load: true
+          tags: homework-template:ci
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Build and validate
+        run: |
+          docker run --rm \
+            -v "$PWD":/workspace -w /workspace \
+            --user "$(id -u):$(id -g)" \
+            --network none \
+            --cap-drop ALL \
+            --security-opt no-new-privileges \
+            homework-template:ci sh -c 'make -B diagrams && make check-all'
+
+      - name: Verify generated diagrams are current
+        run: git diff --exit-code -- 'assets/diagrams/*.pdf'
+
+      - name: Upload PDFs
+        uses: actions/upload-artifact@v4
+        with:
+          name: homework-template-pdfs
+          path: |
+            homework.pdf
+            showcase.pdf
+          if-no-files-found: warn

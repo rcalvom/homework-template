@@ -1,0 +1,25 @@
+\begin{problem}[10 points]{A recurrence and its closed form}
+  Consider the sequence defined by
+  \[
+    a_0 = 1,
+    \qquad
+    a_n = 2a_{n-1} + 1 \quad \text{for } n \geq 1.
+  \]
+  \begin{subproblems}
+    \item Compute the first four terms.
+    \item Prove that $a_n = 2^{n+1}-1$ for every $n \geq 0$.
+  \end{subproblems}
+
+  \begin{solution}
+    The first four terms are $1$, $3$, $7$, and $15$.
+    We prove the closed form by induction.
+    The base case is $a_0=1=2^1-1$.
+    If $a_k=2^{k+1}-1$, then
+    \[
+      a_{k+1}=2a_k+1
+      =2\left(2^{k+1}-1\right)+1
+      =2^{k+2}-1.
+    \]
+    Therefore, the formula holds for all $n\geq 0$.
+  \end{solution}
+\end{problem}

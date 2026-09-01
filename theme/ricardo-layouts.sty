@@ -1,0 +1,61 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{theme/ricardo-layouts}[2026/08/31 Homework layouts]
+
+\RequirePackage{xparse}
+
+\NewDocumentCommand{\makehomeworktitle}{}{%
+  \thispagestyle{homeworkfirst}%
+  \begin{minipage}[t]{0.64\textwidth}
+    {\Large\bfseries\color{rzaccent}\HomeworkTitle\par}
+    \ifstrempty{\HomeworkSubtitle}{}{%
+      \vspace{0.2em}{\large\HomeworkSubtitle\par}%
+    }
+  \end{minipage}%
+  \hfill
+  \begin{minipage}[t]{0.31\textwidth}
+    \raggedleft
+    {\bfseries\CourseCode\par}
+    {\small\CourseName\par}
+  \end{minipage}
+  \vspace{0.65em}
+
+  {\color{rzaccent}\rule{\textwidth}{1.1pt}}
+  \vspace{0.45em}
+
+  \begin{minipage}[t]{0.49\textwidth}
+    \textbf{Student}\quad \StudentName\par
+    \textbf{Instructor}\quad \InstructorName\par
+    \textbf{Collaborators}\quad \Collaborators
+  \end{minipage}%
+  \hfill
+  \begin{minipage}[t]{0.43\textwidth}
+    \textbf{Student ID}\quad \StudentId\par
+    \textbf{Due date}\quad \SubmissionDate
+  \end{minipage}
+  \vspace{0.6\baselineskip}
+}
+
+\NewDocumentCommand{\HomeworkFigure}{O{0.75\linewidth} m m m m}{%
+  \par\addvspace{0.8\baselineskip}%
+  \begin{figure}[H]
+    \centering
+    \IfFileExists{#2}{%
+      \includegraphics[width=#1,alt={#4}]{#2}%
+    }{%
+      \PackageWarning{ricardo-homework}{Image `#2' not found}%
+      \fcolorbox{rzerror}{white}{%
+        \parbox[c][0.18\textheight][c]{0.72\linewidth}{%
+          \centering\color{rzerror}\textbf{Image not found}\par
+          \texttt{\detokenize{#2}}%
+        }%
+      }%
+    }
+    \caption{#3}
+    \label{#5}
+  \end{figure}%
+  \par\addvspace{0.8\baselineskip}%
+}
+
+\NewDocumentCommand{\HomeworkDiagram}{O{0.85\linewidth} m m m m}{%
+  \HomeworkFigure[#1]{assets/diagrams/#2.pdf}{#3}{#4}{#5}%
+}
