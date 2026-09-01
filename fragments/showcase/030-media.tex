@@ -19,7 +19,12 @@ The caption is a label for a reader who can see the figure; the description is t
 Diagrams are written in D2 under \filepath{assets/diagrams/} and compiled to PDF by \code{make diagrams}.
 The generated PDFs stay committed, so editing a diagram needs D2 installed but compiling the document does not.
 
-A diagram needs its description more than a photograph does, and not for the reason usually given.
-The labels do reach the text layer --- \code{rsvg-convert} embeds the font rather than outlining it.
-What does not survive is the diagram: the words arrive as a loose sequence in drawing order, with no edges, no direction and no shape.
+A diagram needs its description more than a photograph does, and here for two reasons rather than one.
+
+The first is that the labels are not in the text layer at all.
+The pipeline goes through PostScript on its way to PDF, and that hop outlines the glyphs, so \code{pdftotext} returns nothing for a diagram.
+That is a deliberate trade: the PostScript route produces a byte-identical PDF on every run, which is what lets the build assert that a committed diagram still matches its source, and the direct route keeps the text but changes bytes between runs.
+
+The second reason would hold even if the words were there.
+They would arrive as a loose sequence in drawing order, with no edges, no direction and no shape.
 Extractable text is not a description.

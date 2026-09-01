@@ -25,6 +25,10 @@ That is why the engine is `lualatex` and not `pdflatex`.
 - Add problems as `fragments/problems/010-name.tex`, `020-name.tex`, and so on, then include them explicitly from `homework.tex`.
 - Preserve the restrained light design, the standard `article` class, and the two-family split: LaTeX's serif for prose and mathematics, UbuntuMono for anything that is code.
 - Do not set body text in the monospace face. The slides project is all-monospace because a slide holds a sentence; a homework holds proofs.
+- Diagrams compile through PostScript (`rsvg-convert -f ps` then `ps2pdf` with a pinned `SOURCE_DATE_EPOCH`), not through `rsvg-convert -f pdf`.
+  The direct route keeps the labels in the text layer but writes different bytes on every run, which breaks the CI check that a committed diagram still matches its source.
+  The PostScript route is byte-reproducible and outlines the glyphs, so a diagram contributes nothing to the text layer and its `\Description` is the only thing a screen reader gets.
+  Both halves of that trade are real; do not flip it without deciding which one matters more.
 - A document is a folder: `\DocFolder` inputs every `.tex` in one, in name order, so adding a problem is creating a file. Do not add `\input` lines to `homework.tex` or `showcase.tex`.
 - Every `\HomeworkFigure` and `\HomeworkDiagram` must have a meaningful caption, alt text, and label.
 - Edit D2 sources, not generated SVG or PostScript files. Run `make diagrams` and commit the generated PDF with its source.
