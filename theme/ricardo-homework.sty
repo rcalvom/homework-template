@@ -144,8 +144,21 @@
   \fancyhead[L]{\small\CourseCode}
   \fancyhead[R]{\small\HomeworkTitle}
   \fancyfoot[C]{\small\color{rzmuted}\thepage}
-  \renewcommand{\headrulewidth}{0.4pt}
+  \renewcommand{\headrulewidth}{0.5pt}
   \renewcommand{\footrulewidth}{0pt}
+  % The rule takes the accent; the two labels stay in ink.
+  %
+  % Page one closes its header with an accent rule, so this is the same mark
+  % repeated rather than a second idea -- which is most of what gives a
+  % document a signature. Putting the accent on the *text* instead was the
+  % other option and is worse: the headings are accent, and a coloured
+  % running head would read as loud as a heading on every page while saying
+  % something the reader already knows.
+  %
+  % It is decoration, so WCAG 1.4.11 does not apply -- but #005F87 measures
+  % 7.03:1 on white, so the question does not arise either way.
+  \renewcommand{\headrule}{{\color{rzaccent}%
+    \hrule height \headrulewidth width \headwidth}}
 }
 \pagestyle{homework}
 
