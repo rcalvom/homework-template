@@ -45,7 +45,11 @@
   enhanced, breakable, sharp corners, boxrule=0pt,
   colback=rzsurface, coltext=rzink,
   left=2.4mm, right=2.4mm, bottom=1.6mm,
-  fonttitle=\footnotesize\bfseries, coltitle=rzcodetitlefg,
+  % \ttfamily belongs here and not at the call sites. A plate's title is a
+  % filename, a shell name or a label for a listing -- all of them code, none
+  % of them prose -- and putting the family in the style is what stops the
+  % next custom title from quietly coming out in the body serif.
+  fonttitle=\footnotesize\ttfamily\bfseries, coltitle=rzcodetitlefg,
   colbacktitle=rzcodetitlebg,
   attach boxed title to top left={yshift=0pt,xshift=0pt},
   boxed title style={sharp corners, boxrule=0pt, colback=rzcodetitlebg,
@@ -78,7 +82,7 @@
 \NewTCBListing{codebox}{O{\rzdeflang} v}{%
   rzlistingbox, listing only,
   listing engine=minted, minted language=#1,
-  title={\rzfile\rzgap \texttt{#2}},
+  title={\rzfile\rzgap #2},
 }
 % No title bar, and no line numbers: a four-line excerpt needs neither, and
 % the gutter costs width that the code would rather have.
@@ -119,8 +123,13 @@
 % host in blue, then the directory in cyan. \cmdfail turns the arrow red *and*
 % changes it to a cross, so a failed command is not distinguished by colour
 % alone.
+% The host is empty until a document sets one; the path is not.
+% A shell always has a working directory, and a prompt that shows a host with
+% no path looks like a prompt with something missing rather than a prompt with
+% one field switched off. `~' is where a fresh shell sits, so that is the
+% default, and \TermPath{} with an empty argument still turns it off.
 \newcommand{\rzhostlabel}{}
-\newcommand{\rzpathlabel}{}
+\newcommand{\rzpathlabel}{\textasciitilde}
 \NewDocumentCommand{\TermHost}{m}{\renewcommand{\rzhostlabel}{#1}}
 \NewDocumentCommand{\TermPath}{m}{\renewcommand{\rzpathlabel}{#1}}
 
