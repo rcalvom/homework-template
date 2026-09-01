@@ -3,37 +3,55 @@
 
 \RequirePackage{xparse}
 
+% Centred, in the manner of a journal article: the title carries the weight,
+% everything else lines up under it and gets quieter as it descends.
+%
+% The order is deliberate. Title, then what the assignment is, then who is
+% handing it in, then the course, then the date -- a reader scanning a stack
+% of these finds the name and the number in the same place every time.
+%
+% Instructor and collaborators sit last and smallest. They are required on a
+% homework and read by nobody until they matter, which is exactly what a
+% footnote-sized line at the bottom of a header is for.
 \NewDocumentCommand{\makehomeworktitle}{}{%
   \thispagestyle{homeworkfirst}%
-  \begin{minipage}[t]{0.64\textwidth}
-    {\Large\bfseries\color{rzaccent}\HomeworkTitle\par}
+  \begin{center}
+    {\LARGE\bfseries\color{rzaccent}\HomeworkTitle\par}
     \ifstrempty{\HomeworkSubtitle}{}{%
-      \vspace{0.2em}{\large\HomeworkSubtitle\par}%
+      \vspace{0.35em}%
+      {\large\HomeworkSubtitle\par}%
     }
-  \end{minipage}%
-  \hfill
-  \begin{minipage}[t]{0.31\textwidth}
-    \raggedleft
-    {\bfseries\CourseCode\par}
-    {\small\CourseName\par}
-  \end{minipage}
-  \vspace{0.65em}
+    \vspace{0.9em}
 
-  {\color{rzaccent}\rule{\textwidth}{1.1pt}}
-  \vspace{0.45em}
+    {\StudentName
+     \ifstrempty{\StudentId}{}{\rzheadsep\StudentId}\par}
+    \vspace{0.15em}
+    {\CourseCode\ifstrempty{\CourseName}{}{\rzheadsep\CourseName}\par}
+    \vspace{0.15em}
+    {\SubmissionDate\par}
 
-  \begin{minipage}[t]{0.49\textwidth}
-    \textbf{Student}\quad \StudentName\par
-    \textbf{Instructor}\quad \InstructorName\par
-    \textbf{Collaborators}\quad \Collaborators
-  \end{minipage}%
-  \hfill
-  \begin{minipage}[t]{0.43\textwidth}
-    \textbf{Student ID}\quad \StudentId\par
-    \textbf{Due date}\quad \SubmissionDate
-  \end{minipage}
-  \vspace{0.6\baselineskip}
+    \ifboolexpr{ test {\ifstrempty{\InstructorName}}
+                 and test {\ifstrempty{\Collaborators}} }{}{%
+      \vspace{0.45em}
+      {\footnotesize\color{rzmuted}
+       \ifstrempty{\InstructorName}{}{\InstructorName}%
+       \ifboolexpr{ test {\ifstrempty{\InstructorName}}
+                    or test {\ifstrempty{\Collaborators}} }{}{\rzheadsep}%
+       \ifstrempty{\Collaborators}{}{Collaborators: \Collaborators}\par}%
+    }
+
+    % A short rule rather than a full-width one. At this width it closes the
+    % block without drawing a line across the page, which is what the centred
+    % arrangement is trying to avoid in the first place.
+    \vspace{0.7em}
+    {\color{rzaccent}\rule{0.22\textwidth}{1.1pt}}
+  \end{center}
+  \vspace{0.2\baselineskip}
 }
+
+% The separator between fields on one line. A middle dot with air around it,
+% in the muted colour so it groups the fields without competing with them.
+\newcommand{\rzheadsep}{\,{\color{rzmuted}\textperiodcentered}\,}
 
 \NewDocumentCommand{\HomeworkFigure}{O{0.75\linewidth} m m m m}{%
   \par\addvspace{0.8\baselineskip}%
