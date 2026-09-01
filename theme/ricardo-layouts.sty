@@ -13,6 +13,9 @@
 % Instructor and collaborators sit last and smallest. They are required on a
 % homework and read by nobody until they matter, which is exactly what a
 % footnote-sized line at the bottom of a header is for.
+% The share of the text width the rule under the title block spans.
+\providecommand{\rzheadrule}{0.40}
+
 \NewDocumentCommand{\makehomeworktitle}{}{%
   \thispagestyle{homeworkfirst}%
   \begin{center}
@@ -40,11 +43,12 @@
        \ifstrempty{\Collaborators}{}{Collaborators: \Collaborators}\par}%
     }
 
-    % A short rule rather than a full-width one. At this width it closes the
-    % block without drawing a line across the page, which is what the centred
-    % arrangement is trying to avoid in the first place.
+    % Long enough to read as a divider between the header and the body, short
+    % enough not to become a line across the page -- which is what the centred
+    % arrangement is avoiding. \rzheadrule is the one number to change if it
+    % wants to be longer or shorter still.
     \vspace{0.7em}
-    {\color{rzaccent}\rule{0.22\textwidth}{1.1pt}}
+    {\color{rzaccent}\rule{\rzheadrule\textwidth}{1.1pt}}
   \end{center}
   \vspace{0.2\baselineskip}
 }

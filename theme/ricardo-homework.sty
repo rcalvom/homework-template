@@ -124,6 +124,9 @@
   \hfill$\square$\par\smallskip
 }
 
+% Headings carry the accent. It is the one colour in the document that says
+% `structure' rather than `state', and putting it on the headings is what ties
+% them to the callout labels and the code plate's tab.
 \sectionfont{\color{rzaccent}\normalfont\Large\bfseries}
 \subsectionfont{\color{rzaccent}\normalfont\large\bfseries}
 
@@ -132,16 +135,16 @@
   \renewcommand{\headrulewidth}{0pt}
   \fancyfoot[C]{\small\color{rzmuted}\thepage}
 }
-% The running head matches the title block: centred, quiet, and no rule.
-% A line across the top of every page is a lot of ink spent restating what
-% the reader already knows, and with the page number centred at the foot the
-% page is already framed.
+% Course on the left, assignment on the right, with a hairline under them.
+% The title block on page one is centred; this is not, and that is the point:
+% a running head is a locator, and two anchors at the outer edges are easier
+% to find with a thumb than one line in the middle.
 \fancypagestyle{homework}{%
   \fancyhf{}
-  \fancyhead[C]{\footnotesize\color{rzmuted}%
-    \CourseCode\ifstrempty{\HomeworkTitle}{}{\rzheadsep\HomeworkTitle}}
+  \fancyhead[L]{\small\CourseCode}
+  \fancyhead[R]{\small\HomeworkTitle}
   \fancyfoot[C]{\small\color{rzmuted}\thepage}
-  \renewcommand{\headrulewidth}{0pt}
+  \renewcommand{\headrulewidth}{0.4pt}
   \renewcommand{\footrulewidth}{0pt}
 }
 \pagestyle{homework}
