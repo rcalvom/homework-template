@@ -51,7 +51,20 @@
 % glyph, so the template does deliberately what the terminal does by accident.
 \IfFontExistsTF{assets/fonts/rz-prompt-arrow.ttf}{%
   \newfontfamily\rzpromptfont{rz-prompt-arrow.ttf}[Path=assets/fonts/]%
-  \newcommand{\rzprompt}{{\rzpromptfont\symbol{"279C}}}%
+  % Lowered by 80/1000 em, which is measured and not taste.
+  %
+  % Both fonts are 1000 units per em and both have an x-height of 520, so
+  % there is no scale mismatch to correct -- the glyph itself is drawn high.
+  % Adwaita Mono's U+279C spans yMin 20 to yMax 660, putting its optical
+  % centre at 340; UbuntuMono's x-height centre is at 260. The 80 in between
+  % is why the arrow read as sitting above the line while the hyphens beside
+  % it sat in the middle of it.
+  %
+  % [0pt][0pt] so the lowered box adds no depth. Without it the arrow would
+  % deepen its line and open up the spacing of a transcript, which is a
+  % strange price to pay for moving one glyph 0.8pt at body size.
+  \newcommand{\rzprompt}{%
+    \raisebox{-0.08em}[0pt][0pt]{{\rzpromptfont\symbol{"279C}}}}%
 }{%
   \newcommand{\rzprompt}{>}%
 }
