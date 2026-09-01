@@ -1,0 +1,20 @@
+\section{Terminal transcripts}
+
+When the answer is what a command printed, quote the session rather than paraphrasing it.
+The body is verbatim, so nothing inside needs escaping except the arguments of the macros themselves.
+
+\TermHost{arch}
+\TermPath{\textasciitilde/homework}
+\begin{terminal}
+\cmd{make check}
+\dimout{>> homework: LaTeX pass 1}
+\out{homework.pdf: US Letter, tagged}
+\ok{all 42 pairs meet WCAG 2.1 AA}
+\cmdfail{make submit}
+\bad{permission denied}
+\warnout{2 problems still marked TODO}
+\end{terminal}
+
+The prompt follows the \code{ginger} zsh theme: a green arrow, then the host, then the directory.
+\code{\textbackslash cmdfail} turns the arrow red \emph{and} changes it to a cross, so a failed command is not distinguished by colour alone.
+\code{\textbackslash TermHost} and \code{\textbackslash TermPath} set the two labels; leave them empty and the prompt is just the arrow.

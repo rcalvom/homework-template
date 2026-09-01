@@ -1,6 +1,13 @@
 # homework-template
 
-A restrained LaTeX template for university assignments. It keeps the CM-Super typography and generous spacing of a formal letter, then adds numbered problems, solutions, mathematics, figures, D2 diagrams, tables, BibTeX citations, and `minted` code blocks.
+A restrained LaTeX template for university assignments.
+
+The body keeps LaTeX's own serif and generous spacing, because a homework is paragraphs of prose, proofs and mathematics and that is what those are set in.
+Code is different: listings, terminal transcripts and inline identifiers are set in **UbuntuMono**, on the same plate the [slides template](https://github.com/rcalvom/personal-slides-template) uses, with the same palette taken from `~/.config/nvim/lua/ricardo/colors.lua`.
+A listing here and a listing on a slide are recognisably the same object.
+
+On top of that: numbered problems, solutions and answers, four callouts, theorem environments, figures, D2 diagrams, tables, BibTeX citations and shell transcripts.
+Both documents validate as **PDF/UA-2**, and `make check` will not let one stop.
 
 See [`showcase.pdf`](showcase.pdf) for a compiled catalogue of the supported components.
 
@@ -41,7 +48,7 @@ Number problem files with room to insert new work later: `010`, `020`, `030`, an
 | `make clean` | Remove auxiliary files while preserving PDFs. |
 | `make distclean` | Also remove the two generated document PDFs. |
 
-The build uses `pdflatex` with TeX Live's restricted shell escape. `latexminted` is on the restricted command allowlist, so unrestricted `-shell-escape` is neither required nor enabled. BibTeX runs automatically. Build from the repository root because theme and asset paths are relative to it.
+The build uses `lualatex` with TeX Live's restricted shell escape. `lualatex` and not `pdflatex` because loading a `.ttf` needs `fontspec`, and UbuntuMono is a `.ttf`; nothing else about the body text depends on the switch, and Latin Modern is Computer Modern's OpenType successor. `latexminted` is on the restricted command allowlist, so unrestricted `-shell-escape` is neither required nor enabled. BibTeX runs automatically. Build from the repository root because theme and asset paths are relative to it.
 
 ## Docker
 
@@ -79,7 +86,17 @@ Optional drafting support:
 sudo pacman -S --needed inotify-tools
 ```
 
-CM-Super comes from `texlive-fontsrecommended`. No system font configuration or bundled font file is required.
+The body font comes from TeX Live and needs no configuration.
+UbuntuMono ships inside the repository, in `assets/fonts/`, so a clone and the container render identically; its licences travel with it in `assets/fonts/licenses/`.
+
+The code plate's colours are a Pygments plugin in `theme/pygments/`.
+Pygments resolves a style through its registry and never from a path, so it has to be installed:
+
+```bash
+pip install --user -e theme/pygments
+```
+
+The container image does it at build time.
 
 ## Problems and Solutions
 
@@ -117,7 +134,7 @@ D2 diagrams use the same interface and the shared accessible palette:
 \HomeworkDiagram[0.85\linewidth]
   {workflow}
   {Submission workflow.}
-  {Problem sources flow through pdflatex and validation to the final PDF.}
+  {Problem sources flow through lualatex and validation to the final PDF.}
   {fig:workflow}
 ```
 
@@ -126,14 +143,20 @@ Edit `assets/diagrams/workflow.d2`, then run `make diagrams`. The build converts
 ## Code and References
 
 ```latex
-\begin{codebox}[title={Linear search}]{python}
+\begin{codebox}[python]{linear_search.py}
 def locate(values, target):
     return next((i for i, value in enumerate(values)
                  if value == target), None)
 \end{codebox}
 ```
 
-Code uses Pygments through `minted`. The syntax style is intentionally monochrome for reliable print contrast; the surrounding box supplies the visual accent. Keep lines short enough not to wrap and accompany code with prose that explains indentation-dependent behavior for readers using assistive technology.
+The optional argument is the Pygments lexer and the mandatory one is the title, which is read verbatim so that a filename full of underscores needs no escaping.
+That signature is the slides project's, deliberately: a fragment written for one template reads the same in the other.
+
+`codeplain` is the same plate without the title bar or line numbers, and `terminal` sets a shell transcript.
+Every colour in the syntax style is held to 4.5:1 against the plate by `make check-contrast` — none of the styles Pygments ships would pass, the best of them missing AA by a hair.
+
+Keep lines short enough not to wrap, and accompany code with prose that explains indentation-dependent behaviour for readers using assistive technology.
 
 Use standard Natbib commands such as `\citet{key}` and `\citep{key}`. Add records to `references.bib`; the Makefile invokes BibTeX and performs enough LaTeX passes to resolve references.
 

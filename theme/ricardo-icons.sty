@@ -1,0 +1,46 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{theme/ricardo-icons}[2026/08/31 Named Nerd Font glyphs]
+
+% The handful of Nerd Font icons this template uses, and nothing else.
+% The slides project carries forty; a homework needs a file, a terminal and
+% the four callout marks.
+
+\RequirePackage{theme/ricardo-typeface}
+% accsupp gives every glyph an /ActualText, which is what text extraction and
+% assistive technology read instead of the codepoint. It matters more here than
+% in an ordinary document: Nerd Font icons live in the Private Use Area, so
+% without it `pdftotext' returns U+FFFD for every icon and a screen reader
+% announces a replacement character in the middle of a sentence.
+\RequirePackage{accsupp}
+
+% \rz@glyph{<codepoint>}{<ascii fallback>}
+%
+% The fallback doubles as the /ActualText: it already says what the icon means
+% (`[ok]', `[!]'), and where it is empty the icon is decoration and extracting
+% nothing is exactly right. It is also what gets printed when the font is
+% missing, so the document degrades to something readable rather than to a
+% column of blanks.
+\newcommand{\rz@glyph}[2]{%
+  \ifrz@nerdglyphs
+    {\normalfont\ttfamily
+     \BeginAccSupp{method=escape,ActualText={#2}}\char#1\relax\EndAccSupp{}}%
+  \else #2\fi}
+
+% --- objects ----------------------------------------------------------
+\newcommand{\rzfile}{\rz@glyph{"F0F6}{}}
+\newcommand{\rzterm}{\rz@glyph{"F120}{}}
+\newcommand{\rzcodeicon}{\rz@glyph{"E795}{}}
+\newcommand{\rzpencil}{\rz@glyph{"F040}{}}
+
+% --- states -----------------------------------------------------------
+% These carry meaning, so their fallback text does too: a reader who gets the
+% text layer instead of the glyph still learns which state it was.
+\newcommand{\rzcheck}{\rz@glyph{"F00C}{[ok]}}
+\newcommand{\rzcross}{\rz@glyph{"F00D}{[x]}}
+\newcommand{\rzwarnglyph}{\rz@glyph{"F071}{[!]}}
+\newcommand{\rzinfoglyph}{\rz@glyph{"F05A}{[i]}}
+\newcommand{\rzbulb}{\rz@glyph{"F0EB}{[tip]}}
+
+% A thin space after an icon, so `\rzfile\rzgap name' does not need a manual
+% \hspace at every call site.
+\newcommand{\rzgap}{\hspace{0.55em}}

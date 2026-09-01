@@ -13,4 +13,23 @@
 \definecolor{rzwarning}{HTML}{766D0E}
 \definecolor{rzerror}{HTML}{B50769}
 
+% --- code plate -------------------------------------------------------
+% The same plate the slides use in their light scheme, so a listing here and
+% a listing on a slide are recognisably the same object. The title bar reads
+% like an active buffer tab in the editor: filled accent, white name.
+% #FFFFFF on #005F87 measures 7.03:1.
+\colorlet{rzcodetitlebg}{rzaccent}
+\definecolor{rzcodetitlefg}{HTML}{FFFFFF}
+% One step darker than the plate, for rules that should be felt and not read.
+\definecolor{rzsurfacealt}{HTML}{D6D6D6}
+
+% --- callout tints ----------------------------------------------------
+% Each state's own hue at 8% on white. Tinting rather than reusing one grey
+% keeps the four callouts distinguishable at a glance while leaving the text
+% on them at the same contrast it has on the page -- the tint is light enough
+% that rzink still measures well past 4.5:1 on every one.
+\definecolor{rzsuccesssoft}{HTML}{E9F3EF}
+\definecolor{rzwarningsoft}{HTML}{F4F2E4}
+\definecolor{rzerrorsoft}{HTML}{F8E9F0}
+
 \color{rzink}

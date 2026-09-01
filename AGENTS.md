@@ -2,7 +2,9 @@
 
 ## Project Scope
 
-This repository is a public LaTeX template for one university assignment per repository. The generated `homework.pdf` and `showcase.pdf` are tracked artifacts. Both documents use US Letter paper, English document strings, and the CM-Super/EC text family selected through T1 encoding.
+This repository is a public LaTeX template for one university assignment per repository. The generated `homework.pdf` and `showcase.pdf` are tracked artifacts. Both documents use US Letter paper and English document strings.
+The body is Latin Modern, LaTeX's own serif; only the typewriter family is replaced, with UbuntuMono loaded from `assets/fonts/` through `fontspec`.
+That is why the engine is `lualatex` and not `pdflatex`.
 
 ## Repository Structure
 
@@ -21,7 +23,9 @@ This repository is a public LaTeX template for one university assignment per rep
 - Write content, code comments, documentation, and commit messages in English.
 - Keep metadata in `fragments/metadata.tex`; do not put personal data in the reusable template.
 - Add problems as `fragments/problems/010-name.tex`, `020-name.tex`, and so on, then include them explicitly from `homework.tex`.
-- Preserve the restrained light design, standard `article` class, and CM-Super body typeface.
+- Preserve the restrained light design, the standard `article` class, and the two-family split: LaTeX's serif for prose and mathematics, UbuntuMono for anything that is code.
+- Do not set body text in the monospace face. The slides project is all-monospace because a slide holds a sentence; a homework holds proofs.
+- A document is a folder: `\DocFolder` inputs every `.tex` in one, in name order, so adding a problem is creating a file. Do not add `\input` lines to `homework.tex` or `showcase.tex`.
 - Every `\HomeworkFigure` and `\HomeworkDiagram` must have a meaningful caption, alt text, and label.
 - Edit D2 sources, not generated SVG or PostScript files. Run `make diagrams` and commit the generated PDF with its source.
 - Do not commit LaTeX auxiliary files or minted caches.

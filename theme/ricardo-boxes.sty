@@ -3,6 +3,48 @@
 
 \RequirePackage[most]{tcolorbox}
 \RequirePackage{xparse}
+\RequirePackage{theme/ricardo-icons}
+
+% --- the callout idiom --------------------------------------------------
+% A rail down the left and a tint, with no frame around it. This is the
+% slides project's callout, and the reason it has no border is that a box
+% inside a page of prose should interrupt as little as it can: the rail is
+% enough to say `this is set apart', and a full frame makes a page of three
+% of them look like a form.
+%
+% The mark is never colour alone. Each callout carries an icon and a word, so
+% a reader in greyscale, or one who does not distinguish these hues, still
+% gets which kind it is (WCAG 1.4.1).
+\tcbset{rzcallout/.style n args={2}{
+  enhanced, breakable, sharp corners,
+  frame hidden, boxrule=0pt,
+  borderline west={2.2pt}{0pt}{#1},
+  colback=#2, coltext=rzink,
+  left=8pt, right=8pt, top=6pt, bottom=6pt,
+  before skip=0.9\baselineskip, after skip=0.9\baselineskip,
+}}
+\newcommand{\rz@calloutlabel}[3]{{\color{#1}\textbf{#2\rzgap #3}}\hspace{0.8em}}
+
+% \begin{callout}[Optional title] ... \end{callout}
+\NewDocumentEnvironment{callout}{O{Note}}{%
+  \begin{tcolorbox}[rzcallout={rzaccent}{rzaccentsoft}]%
+  \rz@calloutlabel{rzaccent}{\rzinfoglyph}{#1}\ignorespaces
+}{\end{tcolorbox}}
+
+\NewDocumentEnvironment{tip}{O{Takeaway}}{%
+  \begin{tcolorbox}[rzcallout={rzsuccess}{rzsuccesssoft}]%
+  \rz@calloutlabel{rzsuccess}{\rzbulb}{#1}\ignorespaces
+}{\end{tcolorbox}}
+
+\NewDocumentEnvironment{warn}{O{Warning}}{%
+  \begin{tcolorbox}[rzcallout={rzwarning}{rzwarningsoft}]%
+  \rz@calloutlabel{rzwarning}{\rzwarnglyph}{#1}\ignorespaces
+}{\end{tcolorbox}}
+
+\NewDocumentEnvironment{caution}{O{Do not do this}}{%
+  \begin{tcolorbox}[rzcallout={rzerror}{rzerrorsoft}]%
+  \rz@calloutlabel{rzerror}{\rzcross}{#1}\ignorespaces
+}{\end{tcolorbox}}
 
 \newcounter{problem}
 \renewcommand{\theproblem}{\arabic{problem}}
@@ -22,47 +64,15 @@
   \par\addvspace{0.8\baselineskip}%
 }
 
-\NewDocumentEnvironment{solution}{}{%
-  \begin{tcolorbox}[
-    enhanced,
-    breakable,
-    colback=rzaccentsoft,
-    colframe=rzline,
-    coltitle=white,
-    fonttitle=\bfseries,
-    boxrule=0.5pt,
-    arc=0pt,
-    left=7pt,
-    right=7pt,
-    top=6pt,
-    bottom=6pt,
-    before skip=0.9\baselineskip,
-    after skip=0.9\baselineskip,
-    title={Solution}
-  ]
-}{%
-  \end{tcolorbox}
-}
+% Solution and Final answer are callouts too, in the same idiom, so a page
+% does not carry two different kinds of box that mean roughly the same thing.
+% They take a title because a long problem set sometimes wants `Solution (b)'.
+\NewDocumentEnvironment{solution}{O{Solution}}{%
+  \begin{tcolorbox}[rzcallout={rzaccent}{rzaccentsoft}]%
+  \rz@calloutlabel{rzaccent}{\rzpencil}{#1}\ignorespaces
+}{\end{tcolorbox}}
 
-\NewDocumentEnvironment{answer}{}{%
-  \begin{tcolorbox}[
-    enhanced,
-    breakable,
-    colback=white,
-    colframe=rzsuccess,
-    borderline west={2pt}{0pt}{rzsuccess},
-    boxrule=0.5pt,
-    arc=0pt,
-    left=8pt,
-    right=8pt,
-    top=6pt,
-    bottom=6pt,
-    before skip=0.8\baselineskip,
-    after skip=0.8\baselineskip,
-    title={Final answer},
-    coltitle=white,
-    fonttitle=\bfseries
-  ]
-}{%
-  \end{tcolorbox}
-}
+\NewDocumentEnvironment{answer}{O{Final answer}}{%
+  \begin{tcolorbox}[rzcallout={rzsuccess}{rzsuccesssoft}]%
+  \rz@calloutlabel{rzsuccess}{\rzcheck}{#1}\ignorespaces
+}{\end{tcolorbox}}

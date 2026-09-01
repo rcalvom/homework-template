@@ -13,6 +13,8 @@
 \RequirePackage{amssymb}
 \RequirePackage{mathtools}
 \RequirePackage{enumitem}
+% Two columns, for the cheat sheet in the showcase.
+\RequirePackage{multicol}
 \RequirePackage{array}
 \RequirePackage{tabularx}
 \RequirePackage{fancyhdr}
@@ -25,6 +27,22 @@
 \RequirePackage{theme/ricardo-boxes}
 \RequirePackage{theme/ricardo-code}
 \RequirePackage{theme/ricardo-layouts}
+
+% =====================================================================
+%  A document is a folder
+% =====================================================================
+% \DocFolder{fragments/problems} inputs every .tex in that folder, in name
+% order. Adding a problem is then creating a file, and nothing else -- no
+% \input line to remember, and no list in two places to drift apart.
+%
+% Number the files with room to grow: 010, 020, 030. Inserting between two is
+% 015, and no other file has to move. Counting them 1, 2, 3 instead means
+% renumbering the folder every time something goes in the middle.
+%
+% The listing is done in Lua because TeX cannot read a directory. lfs is built
+% into LuaTeX, so this needs no shell escape and no generated file.
+\directlua{rzfolder = dofile("theme/ricardo-folder.lua")}
+\NewDocumentCommand{\DocFolder}{m}{\directlua{rzfolder.folder("#1")}}
 
 \providecommand{\HomeworkTitle}{Homework}
 \providecommand{\TemplateStatus}{template}
@@ -70,14 +88,18 @@
   \refstepcounter{#1}%
   \Needspace{9\baselineskip}%
   \subsection*{#2~\csuse{the#1}\ifstrempty{#3}{}{\space(#3)}}%
+  % The same rail-and-tint idiom as the callouts, so a page carrying a
+  % theorem and a solution does not show two different kinds of box meaning
+  % roughly the same thing. The heading above it already says which it is,
+  % so the box itself needs no label -- only to be visibly set apart.
   \begin{tcolorbox}[
     enhanced,
     breakable,
-    colback=white,
-    colframe=rzline,
-    boxrule=0.5pt,
-    borderline west={2pt}{0pt}{rzaccent},
-    arc=0pt,
+    sharp corners,
+    frame hidden,
+    boxrule=0pt,
+    colback=rzaccentsoft,
+    borderline west={2.2pt}{0pt}{rzaccent},
     left=8pt,
     right=8pt,
     top=6pt,

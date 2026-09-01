@@ -1,37 +1,161 @@
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesPackage{theme/ricardo-code}[2026/08/31 Homework code blocks]
 
+% Code is where this template carries its identity, so the plate here is the
+% one from the slides project's light scheme rather than a generic framed
+% listing: a filled surface with no rule, and a title bar that reads like an
+% active buffer tab in the editor.
+%
+% The colours come from theme/pygments/rzstyle.py, the same palette the
+% terminal and the editor use, resolved for a light background. Every one of
+% them is held to 4.5:1 against the plate by `make check-contrast'. None of
+% the styles Pygments ships would do: measured against #F1F1F1 the best of
+% them is xcode at 4.49:1, which misses AA by a hair and in a way no build
+% would ever report.
+
 \RequirePackage{minted}
+\RequirePackage{fancyvrb}
 \RequirePackage{xparse}
-\tcbuselibrary{minted}
+\RequirePackage{theme/ricardo-palette}
+\RequirePackage{theme/ricardo-icons}
+\tcbuselibrary{minted,skins,breakable}
 
-% The monochrome lexer style keeps every token readable on paper; the box
-% carries the template's visual accent.
-\usemintedstyle{bw}
+% Pygments resolves a style through its plugin registry and never from a path,
+% so theme/pygments has to be installed for this name to answer:
+%     pip install --user -e theme/pygments
+% The container image does it at build time.
+\usemintedstyle{rzstyle-light}
 
-\NewTCBListing{codebox}{O{} m}{%
-  enhanced,
-  breakable,
-  listing engine=minted,
-  minted language=#2,
-  minted options={
-    fontsize=\small,
-    breaklines,
-    autogobble,
-    tabsize=2
-  },
-  listing only,
-  colback=rzsurface,
-  colframe=rzline,
-  coltitle=white,
-  fonttitle=\bfseries,
-  boxrule=0.6pt,
-  arc=0pt,
-  left=5pt,
-  right=5pt,
-  top=5pt,
-  bottom=5pt,
-  before skip=0.9\baselineskip,
-  after skip=0.9\baselineskip,
-  #1
+\setminted{
+  fontsize      = \small,
+  breaklines    = true,
+  breakanywhere = false,
+  autogobble    = true,
+  tabsize       = 2,
+  linenos       = true,
+  % fancyvrb hangs the numbers to the *left* of the body, so without an
+  % xleftmargin to shift the body inwards they hang off the plate and into the
+  % page margin.
+  numbersep     = 1.4em,
+  xleftmargin   = 2.6em,
+}
+
+% --- shared plate geometry --------------------------------------------
+\tcbset{rzlistingbox/.style={
+  enhanced, breakable, sharp corners, boxrule=0pt,
+  colback=rzsurface, coltext=rzink,
+  left=2.4mm, right=2.4mm, bottom=1.6mm,
+  fonttitle=\footnotesize\bfseries, coltitle=rzcodetitlefg,
+  colbacktitle=rzcodetitlebg,
+  attach boxed title to top left={yshift=0pt,xshift=0pt},
+  boxed title style={sharp corners, boxrule=0pt, colback=rzcodetitlebg,
+                     left=2.4mm, right=2.4mm, top=0.8mm, bottom=0.8mm},
+  % clears the boxed title
+  top=4.4mm,
+  before skip=0.9\baselineskip, after skip=0.9\baselineskip,
+}}
+% Without a title bar, for a short excerpt that needs no filename.
+\tcbset{rzlistingbare/.style={rzlistingbox, top=2.0mm}}
+
+% --- author-facing API ------------------------------------------------
+% The signature is the slides project's, deliberately: the optional argument
+% is the Pygments lexer and the mandatory one is the title.
+%
+%     \begin{codebox}[python]{train.py}
+%
+% A fragment written for one template then reads the same in the other, which
+% is the whole point of the two sharing a look.
+\newcommand{\rzdeflang}{python}
+\NewDocumentCommand{\CodeLanguage}{m}{\renewcommand{\rzdeflang}{#1}}
+
+% The title is a `v' argument -- read verbatim -- and not an ordinary one.
+% A code plate's title is a filename, and filenames in a homework are full of
+% underscores: linear_search.py, problem_2.c, sort_test.cpp. As a normal
+% argument the first of those is a subscript and the build dies with
+% `Missing $ inserted' pointing at \end{codebox}, which names the wrong line
+% and explains nothing. Verbatim makes the common case the correct one and
+% costs a title that can carry formatting -- which a filename never wants.
+\NewTCBListing{codebox}{O{\rzdeflang} v}{%
+  rzlistingbox, listing only,
+  listing engine=minted, minted language=#1,
+  title={\rzfile\rzgap \texttt{#2}},
+}
+% No title bar, and no line numbers: a four-line excerpt needs neither, and
+% the gutter costs width that the code would rather have.
+\NewTCBListing{codeplain}{O{\rzdeflang}}{%
+  rzlistingbare, listing only,
+  listing engine=minted, minted language=#1,
+  minted options app={linenos=false, xleftmargin=0pt},
+}
+
+% \inputcode[<lexer>]{<path>} -- a real file, quoted whole, so the listing and
+% the file that was submitted alongside it cannot drift apart.
+\NewDocumentCommand{\inputcode}{O{\rzdeflang} m}{%
+  \inputminted{#1}{#2}%
+}
+
+% --- inline ------------------------------------------------------------
+% \code sets an identifier on a tinted plate, the way an editor marks a
+% search hit. \filepath is the same idea for a path, in the muted colour so a
+% long path does not shout from the middle of a sentence.
+\NewDocumentCommand{\code}{m}{%
+  {\setlength{\fboxsep}{1.5pt}%
+   \colorbox{rzsurface}{\texttt{\small #1}}}}
+\NewDocumentCommand{\filepath}{m}{{\texttt{\small\color{rzmuted}#1}}}
+
+% --- terminal transcript ------------------------------------------------
+% \begin{terminal}
+%   \cmd{make check}
+%   \out{all 42 pairs meet WCAG 2.1 AA}
+%   \ok{done}
+% \end{terminal}
+%
+% Built on fancyvrb rather than minted: a shell transcript is not a program,
+% it is a prompt, a command and its output, and each of those wants its own
+% colour. The body is verbatim, so nothing inside needs escaping except the
+% arguments of the macros below.
+%
+% The prompt mirrors the `ginger' oh-my-zsh theme: a green arrow, then the
+% host in blue, then the directory in cyan. \cmdfail turns the arrow red *and*
+% changes it to a cross, so a failed command is not distinguished by colour
+% alone.
+\newcommand{\rzhostlabel}{}
+\newcommand{\rzpathlabel}{}
+\NewDocumentCommand{\TermHost}{m}{\renewcommand{\rzhostlabel}{#1}}
+\NewDocumentCommand{\TermPath}{m}{\renewcommand{\rzpathlabel}{#1}}
+
+\newcommand{\rz@termprompt}[2]{%
+  {\color{#1}\bfseries #2}\hspace{0.45em}%
+  \ifdefempty{\rzhostlabel}{}{{\color{rzaccent}\rzhostlabel}\hspace{0.45em}}%
+  \ifdefempty{\rzpathlabel}{}{{\color{rzsuccess}\rzpathlabel}\hspace{0.45em}}%
+}
+\NewDocumentCommand{\cmd}{m}{\rz@termprompt{rzsuccess}{\rzprompt}{\color{rzink}#1}}
+\NewDocumentCommand{\cmdfail}{m}{\rz@termprompt{rzerror}{\rzcross}{\color{rzink}#1}}
+\NewDocumentCommand{\out}{m}{{\color{rzink}#1}}
+\NewDocumentCommand{\dimout}{m}{{\color{rzmuted}#1}}
+\NewDocumentCommand{\ok}{m}{{\color{rzsuccess}\rzcheck\rzgap #1}}
+\NewDocumentCommand{\bad}{m}{{\color{rzerror}\rzcross\rzgap #1}}
+\NewDocumentCommand{\warnout}{m}{{\color{rzwarning}\rzwarnglyph\rzgap #1}}
+
+\DefineVerbatimEnvironment{rz@vterm}{Verbatim}{%
+  commandchars=\\\{\},
+  fontsize=\small,
+  xleftmargin=0pt,
+  baselinestretch=1.1,
+}
+
+% The window title is a macro and not an optional argument on purpose. LaTeX
+% peeks for `[' with \@ifnextchar, which skips spaces -- including the newline
+% right after \begin{terminal} -- and fancyvrb needs that newline to still be
+% there when verbatim mode starts.
+\newcommand{\rztermtitle}{\rzterm\rzgap zsh}
+\NewDocumentCommand{\TermTitle}{m}{\renewcommand{\rztermtitle}{#1}}
+
+\newenvironment{terminal}{%
+  \VerbatimEnvironment
+  \begin{tcolorbox}[rzlistingbox, title={\rztermtitle}]%
+  \begin{rz@vterm}%
+}{%
+  \end{rz@vterm}%
+  \end{tcolorbox}%
 }

@@ -1,11 +1,60 @@
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesPackage{theme/ricardo-typeface}[2026/08/31 Homework typeface]
 
-% T1 selects the same CM-Super/EC family used by letter-project when the
-% texlive-fontsrecommended collection is installed.
-\RequirePackage[T1]{fontenc}
-\RequirePackage{textcomp}
+% The body stays in LaTeX's own serif -- Latin Modern, which is Computer
+% Modern's OpenType successor and looks the same. A homework is paragraphs of
+% prose, proofs and mathematics, and that face is what those are set in.
+%
+% Only the typewriter family changes. Code is where this template carries its
+% identity, and that identity is UbuntuMono: the same face the author's
+% terminal, editor and slides use.
+%
+% fontspec is what loads a .ttf, and fontspec needs lualatex -- which is why
+% the Makefile's engine is lualatex and not pdflatex. Nothing else about the
+% body text depends on that switch.
+\RequirePackage{fontspec}
 \RequirePackage{microtype}
+
+% The font ships inside the repository, as it does in the slides project, so a
+% clone and the container render identically. The fallbacks matter less here
+% than they do there, but a missing file should still say so rather than
+% silently substituting Courier.
+\newif\ifrz@nerdglyphs \rz@nerdglyphstrue
+\IfFontExistsTF{assets/fonts/UbuntuMonoNerdFont-Regular.ttf}{%
+  \setmonofont{UbuntuMonoNerdFont-Regular.ttf}[
+    Path            = assets/fonts/,
+    BoldFont        = UbuntuMonoNerdFont-Bold.ttf,
+    ItalicFont      = UbuntuMonoNerdFont-Italic.ttf,
+    BoldItalicFont  = UbuntuMonoNerdFont-BoldItalic.ttf,
+    Scale           = MatchLowercase,
+  ]%
+}{%
+  \IfFontExistsTF{UbuntuMono Nerd Font}{%
+    \PackageWarning{theme/ricardo-typeface}{assets/fonts/ is missing;
+      falling back to the system UbuntuMono Nerd Font}%
+    \setmonofont{UbuntuMono Nerd Font}[Scale=MatchLowercase]%
+  }{%
+    \PackageWarning{theme/ricardo-typeface}{No UbuntuMono Nerd Font found;
+      code will be set in the default typewriter face and the icons will be
+      missing. Run `make fonts' or install ttf-ubuntu-mono-nerd}%
+    \rz@nerdglyphsfalse
+  }%
+}
+
+% Scale=MatchLowercase and not a fixed number: UbuntuMono's x-height is larger
+% than Latin Modern's, so at a nominal match the code looks a size too big
+% beside the prose. Matching the lowercase is what makes the two sit together.
+
+% The zsh prompt arrow, for the terminal environment. No UbuntuMono variant
+% has U+279C; the terminal only appears to, because fontconfig substitutes
+% Adwaita Mono for that one codepoint. This is that font, subset to the single
+% glyph, so the template does deliberately what the terminal does by accident.
+\IfFontExistsTF{assets/fonts/rz-prompt-arrow.ttf}{%
+  \newfontfamily\rzpromptfont{rz-prompt-arrow.ttf}[Path=assets/fonts/]%
+  \newcommand{\rzprompt}{{\rzpromptfont\symbol{"279C}}}%
+}{%
+  \newcommand{\rzprompt}{>}%
+}
 
 \normalfont
 \frenchspacing

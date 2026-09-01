@@ -1,0 +1,36 @@
+\subsection{Other languages}
+
+The optional argument is the Pygments lexer, so any language Pygments knows is available.
+The signature is the slides project's on purpose: a fragment written for one template reads the same in the other.
+
+\begin{codebox}[c]{sum_array.c}
+size_t sum_array(const int *values, size_t n) {
+    size_t total = 0;
+    for (size_t i = 0; i < n; i++) {
+        total += values[i];  /* no overflow check, on purpose */
+    }
+    return total;
+}
+\end{codebox}
+
+\begin{codebox}[haskell]{Fib.hs}
+fib :: Int -> Integer
+fib n = fibs !! n
+  where fibs = 0 : 1 : zipWith (+) fibs (tail fibs)
+\end{codebox}
+
+\subsection{Without a title bar}
+
+\code{codeplain} drops the tab and the line numbers, for an excerpt short enough that neither earns its space.
+
+\begin{codeplain}[sql]
+SELECT course, AVG(grade) AS mean
+  FROM submissions
+ GROUP BY course
+HAVING COUNT(*) > 5;
+\end{codeplain}
+
+\subsection{Inline}
+
+Set an identifier with \code{\textbackslash code}, as in \code{binary\_search(values, target)}, and a path with \code{\textbackslash filepath}, as in \filepath{fragments/problems/010-example.tex}.
+Both stay in Ubuntu Mono, so an identifier reads the same inline as it does inside a plate.

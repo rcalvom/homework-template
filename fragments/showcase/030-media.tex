@@ -6,11 +6,20 @@
   {A pale rectangle marked with the letter A.}
   {fig:sample-image}
 
-\HomeworkDiagram[0.24\linewidth]
+Every figure takes a visual description as its fourth argument, separate from the caption.
+The caption is a label for a reader who can see the figure; the description is the figure, in words, for one who cannot.
+\cref{fig:sample-image} carries both.
+
+\HomeworkDiagram[0.42\linewidth]
   {workflow}
-  {The source-to-submission workflow used by the template.}
-  {Four boxes flow from problem fragments through pdflatex and validation to the final homework PDF.}
+  {The source-to-submission workflow, drawn in D2.}
+  {A downward flow of four boxes: problem fragments go through lualatex to validation, and validation produces homework.pdf.}
   {fig:workflow}
 
-Figures such as \cref{fig:sample-image} accept an explicit visual description.
-Generated diagram PDFs remain committed, so changing a diagram requires D2 but compiling a document does not.
+Diagrams are written in D2 under \filepath{assets/diagrams/} and compiled to PDF by \code{make diagrams}.
+The generated PDFs stay committed, so editing a diagram needs D2 installed but compiling the document does not.
+
+A diagram needs its description more than a photograph does, and not for the reason usually given.
+The labels do reach the text layer --- \code{rsvg-convert} embeds the font rather than outlining it.
+What does not survive is the diagram: the words arrive as a loose sequence in drawing order, with no edges, no direction and no shape.
+Extractable text is not a description.

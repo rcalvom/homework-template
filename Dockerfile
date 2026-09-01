@@ -12,6 +12,7 @@ RUN apt-get update \
     poppler-utils \
     python3-pip \
     python3-pygments \
+    python3-fonttools \
     qpdf \
     unzip \
  && pip install --break-system-packages --no-cache-dir latexminted==0.7.1 \
@@ -63,6 +64,14 @@ RUN set -eux; \
       rm -rf verapdf.zip verapdf-greenfield-*; \
       verapdf --version; \
     fi
+
+# The code plate's colours are a Pygments plugin, and Pygments resolves a style
+# through its registry rather than from a path -- so PYTHONPATH is not enough
+# and the style has to be installed. theme/pygments is the one thing copied
+# into an image that otherwise bind-mounts the repository.
+COPY theme/pygments /opt/rzstyle
+RUN pip install --break-system-packages --no-cache-dir /opt/rzstyle \
+ && pygmentize -S rzstyle-light -f latex >/dev/null
 
 WORKDIR /workspace
 

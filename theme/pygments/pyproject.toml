@@ -1,0 +1,27 @@
+# Registers the two styles in rzstyle.py as Pygments plugins, which is the
+# only way Pygments will resolve them by name -- it does not load a style from
+# a path, and minted additionally rejects any name containing a dot.
+#
+#     pip install --user -e theme/pygments
+#
+# Not optional. minted is the theme's only code engine and the theme asks for
+# these styles by name, so a deck will not build without them. The Docker
+# image installs this at build time; a local clone has to do it once.
+
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "rzstyle"
+version = "1.0.0"
+description = "Pygments styles matching ricardo's Neovim colours"
+requires-python = ">=3.9"
+dependencies = ["Pygments>=2.12"]
+
+[project.entry-points."pygments.styles"]
+rzstyle = "rzstyle:RicardoStyle"
+rzstyle-light = "rzstyle:RicardoLightStyle"
+
+[tool.setuptools]
+py-modules = ["rzstyle"]

@@ -1,5 +1,12 @@
 #!/usr/bin/env python3
-"""Validate paper size, tagging, embedded fonts, and CM-Super usage."""
+"""Validate paper size, tagging, and the two-family typography.
+
+The template pairs LaTeX's own serif for the body with UbuntuMono for code,
+and this checks that both actually reached the PDF. It is not a formality:
+a missing assets/fonts/ falls back to the default typewriter face, which
+compiles cleanly, looks almost right at a glance, and quietly drops the one
+thing that makes a listing here look like a listing in the slides.
+"""
 
 from __future__ import annotations
 
@@ -52,8 +59,15 @@ def check_pdf(path: Path) -> list[str]:
         errors.append("no fonts found")
     if rows and any(len(row) < 6 or row[-5].lower() != "yes" for row in rows):
         errors.append("one or more fonts are not embedded")
-    if rows and not any(row[0].split("+")[-1].startswith("SF") for row in rows):
-        errors.append("CM-Super text font not found")
+    names = [row[0].split("+")[-1] for row in rows]
+    # Latin Modern is what lualatex gives a document that sets no main font,
+    # and it is Computer Modern's OpenType successor -- the body is meant to
+    # look exactly as it always did.
+    if rows and not any(n.startswith(("LM", "CM", "SF")) for n in names):
+        errors.append("no Latin Modern / Computer Modern body font found")
+    if rows and not any("UbuntuMono" in n for n in names):
+        errors.append("UbuntuMono not embedded -- code fell back to the "
+                      "default typewriter face; check assets/fonts/")
     return errors
 
 
@@ -78,7 +92,8 @@ def main() -> int:
                 print(f"  {error}")
             failed = True
         else:
-            print(f"{path}: US Letter, tagged, CM-Super fonts embedded")
+            print(f"{path}: US Letter, tagged, "
+                  f"Latin Modern body + UbuntuMono code, all embedded")
     return 1 if failed else 0
 
 

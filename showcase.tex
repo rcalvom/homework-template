@@ -5,7 +5,7 @@
 }
 \documentclass[letterpaper,11pt]{article}
 
-\input{fragments/showcase/metadata}
+\input{fragments/showcase/_metadata}
 \usepackage{theme/ricardo-homework}
 
 \hypersetup{
@@ -19,10 +19,10 @@
 
 \makehomeworktitle
 
-\input{fragments/showcase/010-problems}
-\input{fragments/showcase/020-mathematics}
-\input{fragments/showcase/030-media}
-\input{fragments/showcase/040-code-tables}
+% Every .tex in the folder, in name order -- adding a section to this
+% catalogue is creating a file. `_'-prefixed files are skipped, which is why
+% the metadata above is _metadata.tex and is not pulled in twice.
+\DocFolder{fragments/showcase}
 
 \bibliographystyle{plainnat}
 \bibliography{references}

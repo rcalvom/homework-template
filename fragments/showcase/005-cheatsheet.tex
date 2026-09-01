@@ -1,0 +1,57 @@
+\section{Cheat sheet}
+
+Everything this template offers, on one page.
+Each entry names the environment or command that produces it; the sections that follow show them in use.
+
+\begin{multicols}{2}
+\noindent
+\textbf{\color{rzaccent}Structure}\par
+\code{problem} \dotfill\ a numbered problem\par
+\code{subproblems} \dotfill\ (a), (b), (c)\par
+\code{solution} \dotfill\ worked reasoning\par
+\code{answer} \dotfill\ the final result\par
+\code{\textbackslash DocFolder} \dotfill\ include a folder\par
+
+\medskip
+\noindent
+\textbf{\color{rzaccent}Callouts}\par
+\code{callout} \dotfill\ neutral note\par
+\code{tip} \dotfill\ what to remember\par
+\code{warn} \dotfill\ a caveat\par
+\code{caution} \dotfill\ a mistake to avoid\par
+
+\medskip
+\noindent
+\textbf{\color{rzaccent}Mathematics}\par
+\code{theorem} \code{lemma} \code{proposition}\par
+\code{corollary} \code{definition} \code{remark}\par
+\code{proof} \dotfill\ ends with a tombstone\par
+
+\columnbreak
+\noindent
+\textbf{\color{rzaccent}Code}\par
+\code{codebox[lang]\{file\}} \dotfill\ titled plate\par
+\code{codeplain[lang]} \dotfill\ no title bar\par
+\code{\textbackslash inputcode} \dotfill\ a real file\par
+\code{terminal} \dotfill\ shell transcript\par
+\code{\textbackslash code} \code{\textbackslash filepath} \dotfill\ inline\par
+
+\medskip
+\noindent
+\textbf{\color{rzaccent}Figures}\par
+\code{\textbackslash HomeworkFigure} \dotfill\ an image\par
+\code{\textbackslash HomeworkDiagram} \dotfill\ a D2 diagram\par
+
+\medskip
+\noindent
+\textbf{\color{rzaccent}Marks}\par
+\rzcheck\ \code{\textbackslash rzcheck} \quad
+\rzcross\ \code{\textbackslash rzcross}\par
+\rzwarnglyph\ \code{\textbackslash rzwarnglyph} \quad
+\rzinfoglyph\ \code{\textbackslash rzinfoglyph}\par
+\end{multicols}
+
+\begin{callout}[Two rules]
+  Write one problem per file in \filepath{fragments/problems/} and number with room to grow --- \code{010}, \code{020}, \code{030}.
+  Everything in that folder is included in name order, so a new problem is a new file and \filepath{homework.tex} is never edited.
+\end{callout}

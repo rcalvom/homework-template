@@ -8,6 +8,7 @@
 #   make diagrams         rebuild D2 diagrams
 #   make watch            rebuild homework.pdf after source changes
 #   make check            run checks available in a normal local setup
+#   make check-glyphs     verify every declared icon exists in the font
 #   make check-all        also require PDF/UA-2 validation with veraPDF
 #   make submission-check fail if template metadata remains
 #   make clean            remove auxiliary files, preserving tracked PDFs
@@ -16,7 +17,7 @@
 
 MAIN       := homework
 SHOWCASE   := showcase
-PDF_ENGINE := pdflatex
+PDF_ENGINE := lualatex
 TEXMFVAR   := /tmp/texmf-var
 TEXFLAGS   := -interaction=nonstopmode -halt-on-error -file-line-error
 TEXENV     := TEXMFVAR=$(TEXMFVAR) TERM=$${TERM:-dumb}
@@ -48,7 +49,7 @@ VERAPDF ?= verapdf
 .DEFAULT_GOAL := pdf
 
 .PHONY: all pdf showcase diagrams watch open check check-homework check-all check-sources \
-        check-logs check-pdf check-contrast check-pdfua submission-check \
+        check-logs check-pdf check-contrast check-glyphs check-pdfua submission-check \
         clean distclean docker-build docker-shell help
 
 all: pdf showcase
@@ -125,18 +126,21 @@ check-logs: all
 check-pdf: all
 	@python3 scripts/check-pdf.py $(PDF) $(SHOWCASE_PDF)
 
+check-glyphs:
+	@python3 scripts/check-glyphs.py
+
 check-contrast:
 	@python3 scripts/check-contrast.py
 
 check-pdfua: all
 	@VERAPDF=$(VERAPDF) python3 scripts/check-pdfua.py $(PDF) $(SHOWCASE_PDF)
 
-check: check-sources check-contrast $(D2_PDFS)
+check: check-sources check-contrast check-glyphs $(D2_PDFS)
 	$(call build,$(MAIN),$(MAIN))
 	$(call build,$(SHOWCASE),$(SHOWCASE))
 	@python3 scripts/check-pdf.py $(PDF) $(SHOWCASE_PDF)
 
-check-homework: check-sources check-contrast $(D2_PDFS)
+check-homework: check-sources check-contrast check-glyphs $(D2_PDFS)
 	$(call build,$(MAIN),$(MAIN))
 	@python3 scripts/check-pdf.py $(PDF)
 
