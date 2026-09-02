@@ -54,12 +54,22 @@
   attach boxed title to top left={yshift=0pt,xshift=0pt},
   boxed title style={sharp corners, boxrule=0pt, colback=rzcodetitlebg,
                      left=2.4mm, right=2.4mm, top=0.8mm, bottom=0.8mm},
-  % clears the boxed title
-  top=4.4mm,
+  % Interior padding above the first line. It is NOT clearance for the boxed
+  % title: measured on the rendered page, the tab sits entirely above the
+  % plate's fill and takes nothing from the inside, so the 4.4mm that was here
+  % was pure padding against 1.6mm below it, and the plate read top-heavy
+  % because it was -- 6.27mm above the first ink against 3.39mm below the last.
+  %
+  % 1.5mm and not 1.6mm, because equal padding does not give equal gaps: a
+  % line reaches further from the top of its box to the ascender ink than from
+  % the descender ink to the bottom. The number is what evened the two.
+  top=1.5mm,
   before skip=0.9\baselineskip, after skip=0.9\baselineskip,
 }}
 % Without a title bar, for a short excerpt that needs no filename.
-\tcbset{rzlistingbare/.style={rzlistingbox, top=2.0mm}}
+% Without a title bar, for a short excerpt that needs no filename. Its own
+% top, because a plate with no tab above it reads with slightly less air.
+\tcbset{rzlistingbare/.style={rzlistingbox, top=1.6mm}}
 
 % --- author-facing API ------------------------------------------------
 % The signature is the slides project's, deliberately: the optional argument
@@ -130,8 +140,14 @@
 % default, and \TermPath{} with an empty argument still turns it off.
 \newcommand{\rzhostlabel}{}
 \newcommand{\rzpathlabel}{\textasciitilde}
-\NewDocumentCommand{\TermHost}{m}{\renewcommand{\rzhostlabel}{#1}}
-\NewDocumentCommand{\TermPath}{m}{\renewcommand{\rzpathlabel}{#1}}
+% Both take their argument verbatim, and that is the whole point of them.
+% A shell path is made of the characters LaTeX reserves: ~ is a non-breaking
+% space, _ is a subscript, $ opens maths, # is a parameter, % is a comment.
+% \TermPath{~} therefore printed a wide blank rather than a tilde, and
+% \TermPath{~/src/my_app} would have failed outright. Read verbatim, a path
+% is typed the way the shell shows it.
+\NewDocumentCommand{\TermHost}{v}{\renewcommand{\rzhostlabel}{#1}}
+\NewDocumentCommand{\TermPath}{v}{\renewcommand{\rzpathlabel}{#1}}
 
 \newcommand{\rz@termprompt}[2]{%
   {\color{#1}\bfseries #2}\hspace{0.45em}%
@@ -162,7 +178,11 @@
 
 \newenvironment{terminal}{%
   \VerbatimEnvironment
-  \begin{tcolorbox}[rzlistingbox, title={\rztermtitle}]%
+  % top is 0.5mm more than a code plate's, and measured the same way. A
+  % transcript is set through fancyvrb directly rather than through minted, so
+  % its lines reach differently above the ink and one number cannot centre
+  % both boxes. With the plate's 1.5mm this one came out light on top.
+  \begin{tcolorbox}[rzlistingbox, top=2.0mm, title={\rztermtitle}]%
   \begin{rz@vterm}%
 }{%
   \end{rz@vterm}%

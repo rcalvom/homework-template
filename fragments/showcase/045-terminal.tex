@@ -4,7 +4,7 @@ When the answer is what a command printed, quote the session rather than paraphr
 The body is verbatim, so nothing inside needs escaping except the arguments of the macros themselves.
 
 \TermHost{arch}
-\TermPath{\textasciitilde/homework}
+\TermPath{~/homework}
 \begin{terminal}
 \cmd{make check}
 \dimout{>> homework: LaTeX pass 1}
@@ -17,4 +17,6 @@ The body is verbatim, so nothing inside needs escaping except the arguments of t
 
 The prompt follows the \code{ginger} zsh theme: a green arrow, then the host, then the directory.
 \code{\textbackslash cmdfail} turns the arrow red \emph{and} changes it to a cross, so a failed command is not distinguished by colour alone.
-\code{\textbackslash TermHost} and \code{\textbackslash TermPath} set the two labels; leave them empty and the prompt is just the arrow.
+\code{\textbackslash TermHost} and \code{\textbackslash TermPath} set the two labels, and both read their argument verbatim.
+That matters: a shell path is made of the characters LaTeX reserves, so \code{\textbackslash TermPath\{\textasciitilde/src/my\_app\}} is typed the way the shell shows it rather than escaped.
+The path defaults to \code{\textasciitilde}; pass an empty argument to drop it.
