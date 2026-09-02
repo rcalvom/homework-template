@@ -57,6 +57,11 @@ They are recorded so a later session improves the template instead of relitigati
 - **The code plate is the slides project's**, down to the signature: `\begin{codebox}[lexer]{title}`, optional lexer and mandatory title.
   A fragment written for one template then reads the same in the other, which is the point of the two sharing a look.
   Its title is a verbatim argument because filenames in a homework are full of underscores.
+- **List markers are accent, and the colour lives in `\labelitemi` and `\labelenumi`.**
+  enumitem's `font=` key is shorter and does the same thing on LaTeX2e 2026-06-01, which is what the container runs.
+  It does nothing on the 2025-11-01 release Arch ships, where the tagged-list code builds a standard list's label outside enumitem's reach -- so the same source rendered blue markers in the container and black ones on the host.
+  `label=` fails there too, for the same reason; only a list enumitem owns through `\newlist`, such as `subproblems`, honours either key.
+  Do not shorten this back to `font=` without building on both releases.
 - **Callouts have no frame, only a rail and a tint.**
   A box inside a page of prose should interrupt as little as it can, and a page of three framed boxes looks like a form.
   Every one of them carries an icon and a word as well as a colour, so a reader in greyscale still gets which kind it is.

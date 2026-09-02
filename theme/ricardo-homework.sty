@@ -55,24 +55,41 @@
 \providecommand{\SubmissionDate}{\today}
 \providecommand{\Collaborators}{None}
 
-% The markers take the accent; the text stays in ink.
+% The markers take the accent; the text stays in ink. A marker is structure,
+% not prose, and it belongs with the headings and the callout labels rather
+% than with the words. The slides do the same, in the same way -- see
+% \labelitemi in their ricardo-chrome.sty.
 %
-% `font=' in enumitem applies to the label alone, which is why it is used here
-% rather than a hard-coded label=\textcolor{...}{\textbullet}: the marker glyph
-% stays whatever the level's default is -- bullet, dash, asterisk -- and only
-% its colour changes. One key covers every nesting level.
+% Redefining \labelitemi and friends is not the shortest way to write this.
+% enumitem has a font= key that styles a label and nothing else, so
+% `\setlist[itemize]{font=\color{rzaccent}}' would colour every level of a
+% list without naming a single glyph. That is how this was written first, and
+% it works -- on LaTeX2e 2026-06-01, which is what the container runs. It does
+% nothing on the 2025-11-01 that Arch ships, and neither does label= for a
+% standard list: under that release's tagged-list code the label of an itemize
+% or an enumerate is built outside enumitem's reach, so both came out in ink
+% while subproblems, which enumitem owns through \newlist, came out blue. Same
+% source, two LaTeX releases, two different documents.
 %
-% This is the same move the slides make, where the bullet, the dash and the
-% square are all accent-coloured. A marker is structure, not prose, and it
-% belongs with the headings and the callout labels rather than with the words.
-\setlist[itemize]{leftmargin=1.6em,itemsep=0.2em,topsep=0.35em,
-                  font=\color{rzaccent}}
+% \labelitemi is read by both, so the colour lands either way.
+%
+% The glyphs are article's own, level by level, so naming them changes nothing
+% about how a list looks -- bullet, dash, asterisk, middle dot, and 1. (a) i.
+% Change one only to change the shape of a list. \theenumi is left alone on
+% purpose: it is what \ref prints, and a cross-reference is not a marker.
+\renewcommand{\labelitemi}{\textcolor{rzaccent}{\textbullet}}
+\renewcommand{\labelitemii}{\textcolor{rzaccent}{\normalfont\bfseries\textendash}}
+\renewcommand{\labelitemiii}{\textcolor{rzaccent}{\textasteriskcentered}}
+\renewcommand{\labelitemiv}{\textcolor{rzaccent}{\textperiodcentered}}
+\renewcommand{\labelenumi}{\textcolor{rzaccent}{\theenumi.}}
+\renewcommand{\labelenumii}{\textcolor{rzaccent}{(\theenumii)}}
+\renewcommand{\labelenumiii}{\textcolor{rzaccent}{\theenumiii.}}
+\renewcommand{\labelenumiv}{\textcolor{rzaccent}{\theenumiv.}}
+
+\setlist[itemize]{leftmargin=1.6em,itemsep=0.2em,topsep=0.35em}
 \newlist{subproblems}{enumerate}{1}
-\setlist[subproblems]{label=(\alph*),leftmargin=2.1em,itemsep=0.25em,
-                      topsep=0.4em,font=\color{rzaccent}}
-% Plain enumerate too, so a numbered list in an answer matches a lettered one
-% in a problem statement.
-\setlist[enumerate]{font=\color{rzaccent}}
+\setlist[subproblems]{label=\textcolor{rzaccent}{(\alph*)},leftmargin=2.1em,
+                      itemsep=0.25em,topsep=0.4em}
 
 \newcounter{theorem}
 \newcounter{lemma}
