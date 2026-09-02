@@ -20,3 +20,25 @@
 \begin{problem}{A problem without points}
   The points argument is optional, but the descriptive title is required.
 \end{problem}
+
+\subsection*{Lists}
+
+Bullets and numbers both take the accent on the marker and leave the text in ink, so a list reads as structure without the words changing colour.
+
+\begin{itemize}
+  \item A first point, at the top level.
+  \item A second one, with a nested list under it.
+  \begin{itemize}
+    \item The second level takes a dash.
+    \item Only the marker is coloured, at every depth.
+    \begin{itemize}
+      \item And the third an asterisk.
+    \end{itemize}
+  \end{itemize}
+  \item Back at the top level.
+\end{itemize}
+
+\begin{enumerate}
+  \item A numbered list matches the lettered \code{subproblems} above.
+  \item Both are set once, in \filepath{theme/ricardo-homework.sty}.
+\end{enumerate}

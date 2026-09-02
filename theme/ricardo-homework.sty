@@ -55,9 +55,24 @@
 \providecommand{\SubmissionDate}{\today}
 \providecommand{\Collaborators}{None}
 
-\setlist[itemize]{leftmargin=1.6em,itemsep=0.2em,topsep=0.35em}
+% The markers take the accent; the text stays in ink.
+%
+% `font=' in enumitem applies to the label alone, which is why it is used here
+% rather than a hard-coded label=\textcolor{...}{\textbullet}: the marker glyph
+% stays whatever the level's default is -- bullet, dash, asterisk -- and only
+% its colour changes. One key covers every nesting level.
+%
+% This is the same move the slides make, where the bullet, the dash and the
+% square are all accent-coloured. A marker is structure, not prose, and it
+% belongs with the headings and the callout labels rather than with the words.
+\setlist[itemize]{leftmargin=1.6em,itemsep=0.2em,topsep=0.35em,
+                  font=\color{rzaccent}}
 \newlist{subproblems}{enumerate}{1}
-\setlist[subproblems]{label=(\alph*),leftmargin=2.1em,itemsep=0.25em,topsep=0.4em}
+\setlist[subproblems]{label=(\alph*),leftmargin=2.1em,itemsep=0.25em,
+                      topsep=0.4em,font=\color{rzaccent}}
+% Plain enumerate too, so a numbered list in an answer matches a lettered one
+% in a problem statement.
+\setlist[enumerate]{font=\color{rzaccent}}
 
 \newcounter{theorem}
 \newcounter{lemma}
