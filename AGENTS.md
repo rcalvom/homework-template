@@ -43,7 +43,7 @@ They are recorded so a later session improves the template instead of relitigati
   UbuntuMono is for code, terminal transcripts and inline identifiers only.
   Do not set body text in the monospace face: the slides project is all-monospace because a slide holds a sentence, and a homework holds proofs.
 - **The title block is centred**, in the manner of a journal article, chosen over a left rail, a mono kicker and a tinted plate.
-  Title, what the assignment is, who is handing it in, the course, the date, then instructor and collaborators last and smallest.
+  Title, what the assignment is, who is handing it in, the course, the date, then the instructor last and smallest.
 - **Headings are accent blue.**
   Setting them in ink was tried and reverted: with black headings the accent survives only on callout labels, the code tab and links, and the page reads more sober but less like the rest of the family.
 - **The running head is two anchors** -- course left, assignment right, with an accent hairline under them.

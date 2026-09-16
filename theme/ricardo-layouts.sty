@@ -10,9 +10,9 @@
 % handing it in, then the course, then the date -- a reader scanning a stack
 % of these finds the name and the number in the same place every time.
 %
-% Instructor and collaborators sit last and smallest. They are required on a
-% homework and read by nobody until they matter, which is exactly what a
-% footnote-sized line at the bottom of a header is for.
+% The instructor sits last and smallest. It is required on a homework and read
+% by nobody until it matters, which is exactly what a footnote-sized line at
+% the bottom of a header is for.
 % The share of the text width the rule under the title block spans.
 \providecommand{\rzheadrule}{0.40}
 
@@ -33,14 +33,9 @@
     \vspace{0.15em}
     {\SubmissionDate\par}
 
-    \ifboolexpr{ test {\ifstrempty{\InstructorName}}
-                 and test {\ifstrempty{\Collaborators}} }{}{%
+    \ifstrempty{\InstructorName}{}{%
       \vspace{0.45em}
-      {\footnotesize\color{rzmuted}
-       \ifstrempty{\InstructorName}{}{\InstructorName}%
-       \ifboolexpr{ test {\ifstrempty{\InstructorName}}
-                    or test {\ifstrempty{\Collaborators}} }{}{\rzheadsep}%
-       \ifstrempty{\Collaborators}{}{Collaborators: \Collaborators}\par}%
+      {\footnotesize\color{rzmuted}\InstructorName\par}%
     }
 
     % Long enough to read as a divider between the header and the body, short

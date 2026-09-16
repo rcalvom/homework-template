@@ -18,7 +18,6 @@ REQUIRED = {
     "CourseName": "Course Name",
     "InstructorName": "Instructor Name",
     "SubmissionDate": "Month DD, YYYY",
-    "Collaborators": None,
 }
 
 
