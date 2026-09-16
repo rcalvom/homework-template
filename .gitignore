@@ -22,3 +22,4 @@ __pycache__/
 *.py[cod]
 assets/diagrams/*.svg
 .venv/
+homework-overleaf.zip

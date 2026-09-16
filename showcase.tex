@@ -5,7 +5,16 @@
 }
 \documentclass[letterpaper,11pt]{article}
 
-\input{fragments/showcase/_metadata}
+\newcommand{\HomeworkTitle}{Component Showcase}
+\newcommand{\HomeworkSubtitle}{Living documentation for homework-template}
+\newcommand{\StudentName}{Student Name}
+\newcommand{\StudentId}{Student ID}
+\newcommand{\CourseCode}{COURSE 101}
+\newcommand{\CourseName}{Course Name}
+\newcommand{\InstructorName}{Instructor Name}
+\newcommand{\SubmissionDate}{Not applicable}
+\newcommand{\Collaborators}{None}
+
 \usepackage{theme/ricardo-homework}
 
 \hypersetup{
@@ -19,10 +28,310 @@
 
 \makehomeworktitle
 
-% Every .tex in the folder, in name order -- adding a section to this
-% catalogue is creating a file. `_'-prefixed files are skipped, which is why
-% the metadata above is _metadata.tex and is not pulled in twice.
-\DocFolder{fragments/showcase}
+\section{Cheat sheet}
+
+Everything this template offers in a quick reference.
+Each entry names the environment or command that produces it; the sections that follow show them in use.
+
+\begin{multicols}{2}
+\noindent
+\textbf{\color{rzaccent}Structure}\par
+\code{problem} \dotfill\ a numbered problem\par
+\code{subproblems} \dotfill\ (a), (b), (c)\par
+\code{solution} \dotfill\ worked reasoning\par
+\code{answer} \dotfill\ the final result\par
+
+\medskip
+\noindent
+\textbf{\color{rzaccent}Callouts}\par
+\code{callout} \dotfill\ neutral note\par
+\code{tip} \dotfill\ what to remember\par
+\code{warn} \dotfill\ a caveat\par
+\code{caution} \dotfill\ a mistake to avoid\par
+
+\medskip
+\noindent
+\textbf{\color{rzaccent}Drafting}\par
+\code{\textbackslash HomeworkComment} \dotfill\ review note\par
+\code{\textbackslash DeclareCommenter} \dotfill\ author shorthand\par
+\code{\textbackslash TODO} \dotfill\ draft marker\par
+\code{\textbackslash HIDDEN} \dotfill\ source-only note\par
+
+\medskip
+\noindent
+\textbf{\color{rzaccent}Mathematics}\par
+\code{theorem} \code{lemma} \code{proposition}\par
+\code{corollary} \code{definition} \code{remark}\par
+\code{proof} \dotfill\ ends with a tombstone\par
+\code{smalldescription} \dotfill\ compact definitions\par
+
+\columnbreak
+\noindent
+\textbf{\color{rzaccent}Code}\par
+\code{codebox[lang]\{file\}} \dotfill\ titled plate\par
+\code{codeplain[lang]} \dotfill\ no title bar\par
+\code{\textbackslash inputcode} \dotfill\ a real file\par
+\code{terminal} \dotfill\ shell transcript\par
+\code{\textbackslash code} \code{\textbackslash filepath} \dotfill\ inline\par
+
+\medskip
+\noindent
+\textbf{\color{rzaccent}Figures}\par
+\code{\textbackslash HomeworkFigure} \dotfill\ an image\par
+\code{\textbackslash HomeworkDiagram} \dotfill\ a D2 diagram\par
+
+\medskip
+\noindent
+\textbf{\color{rzaccent}Marks}\par
+\rzcheck\ \code{\textbackslash rzcheck} \quad
+\rzcross\ \code{\textbackslash rzcross}\par
+\rzwarnglyph\ \code{\textbackslash rzwarnglyph} \quad
+\rzinfoglyph\ \code{\textbackslash rzinfoglyph}\par
+\end{multicols}
+
+\begin{callout}[Two files]
+  Write the assignment, including its metadata and every problem, in \filepath{homework.tex}.
+  Keep \filepath{showcase.tex} as the independent component reference.
+\end{callout}
+
+\section{Problems and solutions}
+
+\begin{problem}[12 points]{A numbered problem}
+  Problem statements may contain prose, displayed mathematics, lists, and references.
+  The optional argument records the available points.
+  \begin{subproblems}
+    \item The first subproblem.
+    \item The second subproblem.
+  \end{subproblems}
+
+  \begin{solution}
+    Solutions use a distinct breakable panel and may span multiple pages.
+  \end{solution}
+
+  \begin{answer}
+    Use an answer box when the final result should be easy to locate.
+  \end{answer}
+\end{problem}
+
+\begin{problem}{A problem without points}
+  The points argument is optional, but the descriptive title is required.
+\end{problem}
+
+\subsection*{Lists}
+
+Bullets and numbers both take the accent on the marker and leave the text in ink, so a list reads as structure without the words changing colour.
+
+\begin{itemize}
+  \item A first point, at the top level.
+  \item A second one, with a nested list under it.
+  \begin{itemize}
+    \item The second level takes a dash.
+    \item Only the marker is coloured, at every depth.
+    \begin{itemize}
+      \item And the third an asterisk.
+    \end{itemize}
+  \end{itemize}
+  \item Back at the top level.
+\end{itemize}
+
+\begin{enumerate}
+  \item A numbered list matches the lettered \code{subproblems} above.
+  \item Both are set once, in \filepath{theme/ricardo-homework.sty}.
+\end{enumerate}
+
+\section{Callouts}
+
+Four boxes for interrupting the argument.
+Each carries an icon and a word as well as a colour, so a reader in greyscale still gets which kind it is.
+The optional argument replaces the label.
+
+\begin{callout}
+  Neutral context.
+  The default label comes from the environment name.
+\end{callout}
+
+\begin{tip}
+  The one sentence you want the grader to remember.
+\end{tip}
+
+\begin{warn}[Watch the bound]
+  The recurrence only closes for $n\geq 1$; the base case has to be checked separately.
+\end{warn}
+
+\begin{caution}[A common mistake]
+  Do not assume the loop terminates because it does on your inputs.
+\end{caution}
+
+\begin{callout}[Custom label]
+  All four take an optional argument.
+  Giving one turns the label into the sentence it introduces, rather than a generic banner.
+\end{callout}
+
+\section{Draft annotations and writing helpers}
+
+Review comments are visible while \code{\textbackslash TemplateStatus} is not
+\code{final}. The generic command takes an optional author label:
+
+\HomeworkComment[Instructor]{Check whether this argument covers the empty input.}
+
+Declare a short command once when a reviewer comments repeatedly:
+
+\DeclareCommenter{\Reviewer}{Reviewer}
+\Reviewer{State the invariant before using it in the induction step.}
+
+The \TODO{marker identifies wording that still needs attention}. The text remains
+when comments are hidden, but the marker does not.
+\HIDDEN{This editorial note never appears in any mode.}
+
+\begin{smalldescription}
+  \item[Abbreviations] \ie \eg and \etal insert their following space safely.
+  \item[Marks] \cmark\ accepted, \xmark\ rejected, with text alternatives.
+  \item[Comparisons] A \better{better result} and a \worse{worse result} use
+    the theme's checked state colours.
+\end{smalldescription}
+
+\section{Mathematics}
+
+\begin{theorem}[Geometric series]
+  For $r\neq 1$ and every integer $n\geq 0$,
+  \[
+    \sum_{k=0}^{n}r^k=\frac{1-r^{n+1}}{1-r}.
+  \]
+\end{theorem}
+
+\begin{proof}
+  Multiply the sum by $1-r$ and cancel adjacent terms.
+\end{proof}
+
+The template includes theorem, lemma, proposition, corollary, definition, and remark environments.
+Equations, theorems, figures, and tables can be referenced with \verb|\cref|.
+
+\section{Images and diagrams}
+
+\HomeworkFigure[0.58\linewidth]
+  {example-image-a}
+  {A sample raster-compatible figure included by the TeX distribution.}
+  {A pale rectangle marked with the letter A.}
+  {fig:sample-image}
+
+Every figure takes a visual description as its fourth argument, separate from the caption.
+The caption is a label for a reader who can see the figure; the description is the figure, in words, for one who cannot.
+\Cref{fig:sample-image} carries both.
+
+\HomeworkDiagram[0.42\linewidth]
+  {workflow}
+  {The source-to-submission workflow, drawn in D2.}
+  {A downward flow of four boxes: homework.tex goes through lualatex to validation, and validation produces homework.pdf.}
+  {fig:workflow}
+
+Diagrams are written in D2 under \filepath{assets/diagrams/} and compiled to PDF by \code{make diagrams}.
+The generated PDFs stay committed, so editing a diagram needs D2 installed but compiling the document does not.
+
+A diagram needs its description more than a photograph does, and here for two reasons rather than one.
+
+The first is that the labels are not in the text layer at all.
+The pipeline goes through PostScript on its way to PDF, and that hop outlines the glyphs, so \code{pdftotext} returns nothing for a diagram.
+That is a deliberate trade: the PostScript route produces a byte-identical PDF on every run, which is what lets the build assert that a committed diagram still matches its source, and the direct route keeps the text but changes bytes between runs.
+
+The second reason would hold even if the words were there.
+They would arrive as a loose sequence in drawing order, with no edges, no direction and no shape.
+Extractable text is not a description.
+
+\section{Code, tables, and citations}
+
+\begin{codebox}[python]{binary_search.py}
+def binary_search(values, target):
+    low, high = 0, len(values) - 1
+    while low <= high:
+        middle = (low + high) // 2
+        if values[middle] == target:
+            return middle
+        if values[middle] < target:
+            low = middle + 1
+        else:
+            high = middle - 1
+    return None
+\end{codebox}
+
+\par\addvspace{0.8\baselineskip}
+\begin{table}[H]
+  \centering
+  \caption{Asymptotic costs of common search operations.}
+  \label{tab:complexity}
+  \begingroup
+  \tagpdfsetup{table/header-rows={1}}
+  \begin{tabular}{@{}lll@{}}
+    \textbf{Method} & \textbf{Prerequisite} & \textbf{Worst case} \\[0.35em]
+    Linear search & None & $\Theta(n)$ \\
+    Binary search & Sorted input & $\Theta(\log n)$ \\
+    Hash lookup & Suitable hash table & $\Theta(n)$ \\
+  \end{tabular}
+  \endgroup
+\end{table}
+\par\addvspace{0.8\baselineskip}
+
+\Cref{tab:complexity} uses spacing rather than decorative rules or vertical separators.
+Bibliographic citations use BibTeX and Natbib; for example, see \citet{knuth1984literate}.
+
+\subsection{Other languages}
+
+The optional argument is the Pygments lexer, so any language Pygments knows is available.
+The signature is the slides project's on purpose: content written for one template reads the same in the other.
+
+\begin{codebox}[c]{sum_array.c}
+size_t sum_array(const int *values, size_t n) {
+    size_t total = 0;
+    for (size_t i = 0; i < n; i++) {
+        total += values[i];  /* no overflow check, on purpose */
+    }
+    return total;
+}
+\end{codebox}
+
+\begin{codebox}[haskell]{Fib.hs}
+fib :: Int -> Integer
+fib n = fibs !! n
+  where fibs = 0 : 1 : zipWith (+) fibs (tail fibs)
+\end{codebox}
+
+\subsection{Without a title bar}
+
+\code{codeplain} drops the tab and the line numbers, for an excerpt short enough that neither earns its space.
+
+\begin{codeplain}[sql]
+SELECT course, AVG(grade) AS mean
+  FROM submissions
+ GROUP BY course
+HAVING COUNT(*) > 5;
+\end{codeplain}
+
+\subsection{Inline}
+
+Set an identifier with \code{\textbackslash code}, as in \code{binary\_search(values, target)}, and a path with \code{\textbackslash filepath}, as in \filepath{homework.tex}.
+Both stay in Ubuntu Mono, so an identifier reads the same inline as it does inside a plate.
+
+\section{Terminal transcripts}
+
+When the answer is what a command printed, quote the session rather than paraphrasing it.
+The body is verbatim, so nothing inside needs escaping except the arguments of the macros themselves.
+
+\TermHost{arch}
+\TermPath{~/homework}
+\begin{terminal}
+\cmd{make check}
+\dimout{>> homework: LaTeX pass 1}
+\out{homework.pdf: US Letter, tagged}
+\ok{all 42 pairs meet WCAG 2.1 AA}
+\cmdfail{make submit}
+\bad{permission denied}
+\warnout{2 problems still marked TODO}
+\end{terminal}
+
+The prompt follows the \code{ginger} zsh theme: a green arrow, then the host, then the directory.
+\code{\textbackslash cmdfail} turns the arrow red \emph{and} changes it to a cross, so a failed command is not distinguished by colour alone.
+\code{\textbackslash TermHost} and \code{\textbackslash TermPath} set the two labels, and both read their argument verbatim.
+That matters: a shell path is made of the characters LaTeX reserves, so \code{\textbackslash TermPath\{\textasciitilde/src/my\_app\}} is typed the way the shell shows it rather than escaped.
+The path defaults to \code{\textasciitilde}; pass an empty argument to drop it.
 
 \bibliographystyle{plainnat}
 \bibliography{references}

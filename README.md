@@ -6,7 +6,7 @@ The body keeps LaTeX's own serif and generous spacing, because a homework is par
 Code is different: listings, terminal transcripts and inline identifiers are set in **UbuntuMono**, on the same plate the [slides template](https://github.com/rcalvom/personal-slides-template) uses, with the same palette taken from `~/.config/nvim/lua/ricardo/colors.lua`.
 A listing here and a listing on a slide are recognisably the same object.
 
-On top of that: numbered problems, solutions and answers, four callouts, theorem environments, figures, D2 diagrams, tables, BibTeX citations and shell transcripts.
+On top of that: numbered problems, solutions and answers, four callouts, review annotations, theorem environments, figures, D2 diagrams, tables, BibTeX citations and shell transcripts.
 Both documents validate as **PDF/UA-2**, and `make check` will not let one stop.
 
 See [`showcase.pdf`](showcase.pdf) for a compiled catalogue of the supported components.
@@ -23,14 +23,14 @@ make
 
 ## Getting Started
 
-1. Edit `fragments/metadata.tex`.
-2. Replace the example files in `fragments/problems/`.
-3. Include each problem explicitly from `homework.tex` in submission order.
+1. Edit the metadata block at the top of `homework.tex`.
+2. Replace the example `problem` environments in `homework.tex`.
+3. Add and reorder problems directly in `homework.tex`.
 4. Put images in `assets/img/` and D2 sources in `assets/diagrams/`.
 5. Add BibTeX entries to `references.bib`.
 6. Set `\TemplateStatus` to `final`, freeze the date, and run `make submission-check` before submitting the PDF.
 
-Number problem files with room to insert new work later: `010`, `020`, `030`, and so on. Explicit `\input` lines make the submission order visible without generated manifests or engine-specific directory scanning.
+The complete assignment lives in one collaborative source file. `showcase.tex` remains separate because it is documentation, not submission content.
 
 ## Build
 
@@ -40,6 +40,7 @@ Number problem files with room to insert new work later: `010`, `020`, `030`, an
 | `make showcase` | Build the component catalogue. |
 | `make all` | Build both PDFs. |
 | `make diagrams` | Compile D2 sources to vector PDFs. |
+| `make overleaf-zip` | Create `homework-overleaf.zip` for direct import into Overleaf. |
 | `make watch` | Rebuild the homework after source changes. |
 | `make open` | Open `homework.pdf`. |
 | `make check` | Run source, contrast, log, paper, tagging, and font checks. |
@@ -49,6 +50,20 @@ Number problem files with room to insert new work later: `010`, `020`, `030`, an
 | `make distclean` | Also remove the two generated document PDFs. |
 
 The build uses `lualatex` with TeX Live's restricted shell escape. `lualatex` and not `pdflatex` because loading a `.ttf` needs `fontspec`, and UbuntuMono is a `.ttf`; nothing else about the body text depends on the switch, and Latin Modern is Computer Modern's OpenType successor. `latexminted` is on the restricted command allowlist, so unrestricted `-shell-escape` is neither required nor enabled. BibTeX runs automatically. Build from the repository root because theme and asset paths are relative to it.
+
+## Overleaf
+
+Create the upload archive locally:
+
+```bash
+make overleaf-zip
+```
+
+In Overleaf, choose **New Project → Upload Project** and upload `homework-overleaf.zip`. The archive has `homework.tex` as its only root document and includes the fonts, figures, generated diagrams, and a vendored `minted` style definition.
+
+After importing, open **Settings → Compiler**, select **LuaLaTeX**, and use Overleaf's latest TeX Live release. Overleaf stores the compiler outside the uploaded project and defaults ZIP imports to pdfLaTeX, so this one setting cannot be encoded in the archive. The included `latexmkrc` selects LuaLaTeX when the archive is extracted and built with `latexmk` locally.
+
+Do not upload GitHub's source archive directly. The custom Pygments plugin cannot be installed in Overleaf; `make overleaf-zip` converts that plugin into the TeX style file that `minted` can consume there while leaving code blocks editable.
 
 ## Docker
 
@@ -97,6 +112,7 @@ pip install --user -e theme/pygments
 ```
 
 The container image does it at build time.
+The Overleaf archive instead carries a generated style definition and does not require installing the plugin on Overleaf.
 
 ## Problems and Solutions
 
@@ -116,6 +132,32 @@ The container image does it at build time.
 
 The optional argument records points. The title is required. `theorem`, `lemma`, `proposition`, `corollary`, `definition`, `remark`, `proof`, and `answer` are also available.
 
+## Draft Annotations
+
+The reusable parts of the course `typesetting.tex` file are built into the theme. Do not `\input` that file: it resets list and reference formatting and depends on paper-specific commands that this template does not use.
+
+Add a labelled review comment directly in any problem:
+
+```latex
+\HomeworkComment[JD]{Check the empty-input case.}
+```
+
+For a reviewer who comments repeatedly, declare a shorthand in the preamble of `homework.tex`, after the theme package and before `\begin{document}`:
+
+```latex
+\DeclareCommenter{\JD}{JD}
+\JD{State the invariant before using it.}
+```
+
+The metadata setting `\CommentsMode` accepts `auto`, `show`, or `hide`. Its default is `auto`: comments and `[TODO]` markers are visible while drafting and disappear when `\TemplateStatus` is `final`. TODO text remains in the final prose; only its marker disappears. `\HIDDEN{...}` never appears in the document.
+
+```latex
+This \TODO{claim still needs a citation}.
+\HIDDEN{Ask whether the proof should move to an appendix.}
+```
+
+The integration also provides `\ie`, `\eg`, `\etal`, `\benchname`, `\powerset`, `\bul`, `\cmark`, `\xmark`, `\better`, `\worse`, `smalldescription`, `RQList`, `algorithm`, and `\multirow`. Group-specific names such as `\packetdrill` and IEEE author-layout commands were intentionally omitted.
+
 ## Images and Diagrams
 
 Every figure requires a visual description distinct from its caption:
@@ -134,7 +176,7 @@ D2 diagrams use the same interface and the shared accessible palette:
 \HomeworkDiagram[0.85\linewidth]
   {workflow}
   {Submission workflow.}
-  {Problem sources flow through lualatex and validation to the final PDF.}
+  {homework.tex flows through lualatex and validation to the final PDF.}
   {fig:workflow}
 ```
 
@@ -151,7 +193,7 @@ def locate(values, target):
 ```
 
 The optional argument is the Pygments lexer and the mandatory one is the title, which is read verbatim so that a filename full of underscores needs no escaping.
-That signature is the slides project's, deliberately: a fragment written for one template reads the same in the other.
+That signature is the slides project's, deliberately: content written for one template reads the same in the other.
 
 `codeplain` is the same plate without the title bar or line numbers, and `terminal` sets a shell transcript.
 Every colour in the syntax style is held to 4.5:1 against the plate by `make check-contrast` — none of the styles Pygments ships would pass, the best of them missing AA by a hair.
@@ -163,11 +205,8 @@ Use standard Natbib commands such as `\citet{key}` and `\citep{key}`. Add record
 ## Layout
 
 ```text
-homework.tex                 assignment assembly
-showcase.tex                 component catalogue
-fragments/metadata.tex       editable assignment metadata
-fragments/problems/          one file per problem
-fragments/showcase/          catalogue content
+homework.tex                 complete assignment source
+showcase.tex                 self-contained component catalogue
 assets/img/                  figures
 assets/diagrams/             D2 sources and generated PDFs
 theme/                       typography, palette, boxes, code, layouts

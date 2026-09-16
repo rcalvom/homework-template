@@ -41,16 +41,18 @@ jobs:
             --network none \
             --cap-drop ALL \
             --security-opt no-new-privileges \
-            homework-template:ci sh -c 'make -B diagrams && make check-all'
+            homework-template:ci sh -c \
+              'make -B diagrams && make check-all && make overleaf-zip'
 
       - name: Verify generated diagrams are current
         run: git diff --exit-code -- 'assets/diagrams/*.pdf'
 
-      - name: Upload PDFs
+      - name: Upload build artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: homework-template-pdfs
+          name: homework-template-artifacts
           path: |
             homework.pdf
             showcase.pdf
+            homework-overleaf.zip
           if-no-files-found: warn

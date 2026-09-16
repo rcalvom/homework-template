@@ -8,10 +8,8 @@ That is why the engine is `lualatex` and not `pdflatex`.
 
 ## Repository Structure
 
-- `homework.tex` assembles an assignment.
-- `fragments/metadata.tex` contains assignment metadata and public placeholders.
-- `fragments/problems/` contains one numbered source file per problem.
-- `showcase.tex` and `fragments/showcase/` are living documentation for every supported component.
+- `homework.tex` contains the complete assignment: metadata, problems, and solutions.
+- `showcase.tex` is the self-contained living documentation for every supported component.
 - `theme/` contains the visual system and public LaTeX environments.
 - `assets/img/` contains ordinary figures.
 - `assets/diagrams/` contains D2 sources and committed generated PDFs.
@@ -21,15 +19,15 @@ That is why the engine is `lualatex` and not `pdflatex`.
 ## Editing Guidelines
 
 - Write content, code comments, documentation, and commit messages in English.
-- Keep metadata in `fragments/metadata.tex`; do not put personal data in the reusable template.
-- Add problems as `fragments/problems/010-name.tex`, `020-name.tex`, and so on, then include them explicitly from `homework.tex`.
+- Keep metadata and assignment content in `homework.tex`; do not put personal data in the reusable template.
+- Add and reorder problems directly in `homework.tex`. Do not split either document into fragments or add `\input` files for ordinary content.
 - Preserve the restrained light design, the standard `article` class, and the two-family split: LaTeX's serif for prose and mathematics, UbuntuMono for anything that is code.
 - Do not set body text in the monospace face. The slides project is all-monospace because a slide holds a sentence; a homework holds proofs.
 - Diagrams compile through PostScript (`rsvg-convert -f ps` then `ps2pdf` with a pinned `SOURCE_DATE_EPOCH`), not through `rsvg-convert -f pdf`.
   The direct route keeps the labels in the text layer but writes different bytes on every run, which breaks the CI check that a committed diagram still matches its source.
   The PostScript route is byte-reproducible and outlines the glyphs, so a diagram contributes nothing to the text layer and its `\Description` is the only thing a screen reader gets.
   Both halves of that trade are real; do not flip it without deciding which one matters more.
-- A document is a folder: `\DocFolder` inputs every `.tex` in one, in name order, so adding a problem is creating a file. Do not add `\input` lines to `homework.tex` or `showcase.tex`.
+- Keep each document self-contained. The assignment has one collaborative source file, `homework.tex`; `showcase.tex` remains a separate reference document.
 - Every `\HomeworkFigure` and `\HomeworkDiagram` must have a meaningful caption, alt text, and label.
 - Edit D2 sources, not generated SVG or PostScript files. Run `make diagrams` and commit the generated PDF with its source.
 - Do not commit LaTeX auxiliary files or minted caches.
@@ -55,7 +53,7 @@ They are recorded so a later session improves the template instead of relitigati
 - **The rule under the title block is `\rzheadrule`**, two fifths of the text width.
   It is one number on purpose, so the next opinion about its length costs one edit.
 - **The code plate is the slides project's**, down to the signature: `\begin{codebox}[lexer]{title}`, optional lexer and mandatory title.
-  A fragment written for one template then reads the same in the other, which is the point of the two sharing a look.
+  Content written for one template then reads the same in the other, which is the point of the two sharing a look.
   Its title is a verbatim argument because filenames in a homework are full of underscores.
 - **List markers are accent, and the colour lives in `\labelitemi` and `\labelenumi`.**
   enumitem's `font=` key is shorter and does the same thing on LaTeX2e 2026-06-01, which is what the container runs.

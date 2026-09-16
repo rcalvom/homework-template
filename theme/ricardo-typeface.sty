@@ -20,7 +20,7 @@
 % than they do there, but a missing file should still say so rather than
 % silently substituting Courier.
 \newif\ifrz@nerdglyphs \rz@nerdglyphstrue
-\IfFontExistsTF{assets/fonts/UbuntuMonoNerdFont-Regular.ttf}{%
+\IfFileExists{assets/fonts/UbuntuMonoNerdFont-Regular.ttf}{%
   \setmonofont{UbuntuMonoNerdFont-Regular.ttf}[
     Path            = assets/fonts/,
     BoldFont        = UbuntuMonoNerdFont-Bold.ttf,
@@ -36,7 +36,7 @@
   }{%
     \PackageWarning{theme/ricardo-typeface}{No UbuntuMono Nerd Font found;
       code will be set in the default typewriter face and the icons will be
-      missing. Run `make fonts' or install ttf-ubuntu-mono-nerd}%
+      missing. Restore assets/fonts/ or install ttf-ubuntu-mono-nerd}%
     \rz@nerdglyphsfalse
   }%
 }
@@ -49,7 +49,7 @@
 % has U+279C; the terminal only appears to, because fontconfig substitutes
 % Adwaita Mono for that one codepoint. This is that font, subset to the single
 % glyph, so the template does deliberately what the terminal does by accident.
-\IfFontExistsTF{assets/fonts/rz-prompt-arrow.ttf}{%
+\IfFileExists{assets/fonts/rz-prompt-arrow.ttf}{%
   \newfontfamily\rzpromptfont{rz-prompt-arrow.ttf}[Path=assets/fonts/]%
   % Lowered by 80/1000 em, which is measured and not taste.
   %

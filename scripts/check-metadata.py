@@ -9,6 +9,7 @@ from pathlib import Path
 
 REQUIRED = {
     "TemplateStatus": "final",
+    "CommentsMode": None,
     "HomeworkTitle": "Homework 01",
     "HomeworkSubtitle": "Template assignment",
     "StudentName": "Student Name",
@@ -27,7 +28,7 @@ def strip_comments(source: str) -> str:
 
 def main() -> int:
     if len(sys.argv) != 2:
-        print("usage: check-metadata.py fragments/metadata.tex", file=sys.stderr)
+        print("usage: check-metadata.py homework.tex", file=sys.stderr)
         return 2
     path = Path(sys.argv[1])
     source = strip_comments(path.read_text(encoding="utf-8"))
@@ -40,15 +41,14 @@ def main() -> int:
             errors.append(f"empty \\{name}")
         elif name == "TemplateStatus" and values[name].strip() != "final":
             errors.append("set \\TemplateStatus to final")
+        elif name == "CommentsMode" and values[name].strip() not in {"auto", "hide"}:
+            errors.append("set \\CommentsMode to auto or hide")
         elif placeholder is not None and values[name].strip() == placeholder:
             errors.append(f"replace \\{name} ({placeholder})")
 
-    homework = path.resolve().parent.parent / "homework.tex"
-    if homework.exists():
-        assembly = strip_comments(homework.read_text(encoding="utf-8"))
-        for example in ("010-example", "020-analysis"):
-            if example in assembly:
-                errors.append(f"replace example problem `{example}`")
+    for example in ("A recurrence and its closed form", "Complexity analysis"):
+        if example in source:
+            errors.append(f"replace example problem `{example}`")
 
     if errors:
         print(f"{path}: not ready for submission:")

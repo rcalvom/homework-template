@@ -6,6 +6,7 @@
 #   make showcase         build showcase.pdf
 #   make all              build both PDFs
 #   make diagrams         rebuild D2 diagrams
+#   make overleaf-zip     create an Overleaf-ready project archive
 #   make watch            rebuild homework.pdf after source changes
 #   make check            run checks available in a normal local setup
 #   make check-glyphs     verify every declared icon exists in the font
@@ -24,17 +25,17 @@ TEXENV     := TEXMFVAR=$(TEXMFVAR) TERM=$${TERM:-dumb}
 
 PDF          := $(MAIN).pdf
 SHOWCASE_PDF := $(SHOWCASE).pdf
+OVERLEAF_ZIP := homework-overleaf.zip
 
 THEME_FILES    := $(shell find theme -type f -name '*.sty' | sort)
-FRAGMENT_FILES := $(shell find fragments -type f -name '*.tex' | sort)
 IMAGE_FILES    := $(shell find assets/img -type f | sort)
 D2_SOURCES     := $(filter-out assets/diagrams/_%,$(wildcard assets/diagrams/*.d2))
 D2_PDFS        := $(D2_SOURCES:.d2=.pdf)
 
-SOURCES := $(MAIN).tex references.bib $(THEME_FILES) $(FRAGMENT_FILES) \
+SOURCES := $(MAIN).tex references.bib $(THEME_FILES) \
            $(IMAGE_FILES) $(D2_PDFS) Makefile
 SHOWCASE_SOURCES := $(SHOWCASE).tex references.bib $(THEME_FILES) \
-                    $(FRAGMENT_FILES) $(IMAGE_FILES) $(D2_PDFS) Makefile
+                     $(IMAGE_FILES) $(D2_PDFS) Makefile
 
 LATEX_AUX_FILES := *.aux *.log *.out *.toc *.lof *.lot *.fls *.fdb_latexmk \
                    *.synctex.gz *.bbl *.blg *.bcf *.run.xml *.listing
@@ -48,9 +49,9 @@ VERAPDF ?= verapdf
 
 .DEFAULT_GOAL := pdf
 
-.PHONY: all pdf showcase diagrams watch open check check-homework check-all check-sources \
-        check-logs check-pdf check-contrast check-glyphs check-pdfua submission-check \
-        clean distclean docker-build docker-shell help
+.PHONY: all pdf showcase diagrams overleaf-zip watch open check check-homework check-all check-sources \
+         check-logs check-pdf check-contrast check-glyphs check-pdfua submission-check \
+         clean distclean docker-build docker-shell help
 
 all: pdf showcase
 
@@ -104,13 +105,16 @@ assets/diagrams/%.pdf: assets/diagrams/%.d2 assets/diagrams/_theme.d2
 
 diagrams: $(D2_PDFS)
 
+overleaf-zip:
+	@python3 scripts/make-overleaf-zip.py $(OVERLEAF_ZIP)
+
 watch:
 	@command -v inotifywait >/dev/null 2>&1 || { \
 	  echo "inotifywait not found -- install inotify-tools"; exit 1; }
 	@echo ">> watching LaTeX sources and assets (Ctrl-C to stop)"
 	@$(MAKE) --no-print-directory pdf || true
 	@while inotifywait -qq -r -e close_write,create,delete,move \
-	    $(MAIN).tex fragments theme assets; do \
+	    $(MAIN).tex theme assets; do \
 	  $(MAKE) --no-print-directory pdf || true; \
 	done
 
@@ -148,7 +152,7 @@ check-all: check
 	@VERAPDF=$(VERAPDF) python3 scripts/check-pdfua.py $(PDF) $(SHOWCASE_PDF)
 
 submission-check: check-homework
-	@python3 scripts/check-metadata.py fragments/metadata.tex
+	@python3 scripts/check-metadata.py $(MAIN).tex
 
 docker-build:
 	docker compose build
@@ -162,6 +166,7 @@ clean:
 	rm -f $(TAG_FILES)
 	rm -rf $(PYC_FILES)
 	rm -f $(D2_SCRATCH)
+	rm -f $(OVERLEAF_ZIP)
 
 distclean: clean
 	rm -f $(PDF) $(SHOWCASE_PDF)

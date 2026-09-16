@@ -1,0 +1,113 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{theme/ricardo-typesetting}[2026/09/16 Review annotations and writing helpers]
+
+\RequirePackage{algorithm}
+\RequirePackage{amssymb}
+\RequirePackage{enumitem}
+\RequirePackage{etoolbox}
+\RequirePackage{multirow}
+\RequirePackage{xparse}
+\RequirePackage{xspace}
+\RequirePackage{theme/ricardo-boxes}
+\RequirePackage{theme/ricardo-icons}
+\RequirePackage{theme/ricardo-palette}
+
+% CommentsMode accepts auto, show, or hide. Auto is the safe default: review
+% annotations remain visible while drafting and disappear when TemplateStatus
+% is final, so the submission gate also controls editorial markup.
+\providecommand{\TemplateStatus}{template}
+\providecommand{\CommentsMode}{auto}
+\newif\ifrz@comments
+\ifdefstring{\CommentsMode}{show}{%
+  \rz@commentstrue
+}{%
+  \ifdefstring{\CommentsMode}{hide}{%
+    \rz@commentsfalse
+  }{%
+    \ifdefstring{\CommentsMode}{auto}{%
+      \ifdefstring{\TemplateStatus}{final}{\rz@commentsfalse}{\rz@commentstrue}%
+    }{%
+      \PackageWarning{theme/ricardo-typesetting}{Unknown CommentsMode
+        `\CommentsMode'; using auto}%
+      \ifdefstring{\TemplateStatus}{final}{\rz@commentsfalse}{\rz@commentstrue}%
+    }%
+  }%
+}
+
+% A block comment is labelled as well as coloured, so author identity remains
+% available in greyscale and to assistive technology.
+\NewDocumentCommand{\HomeworkComment}{O{Comment} +m}{%
+  \ifrz@comments
+    \begin{tcolorbox}[rzcallout={rzaccent}{rzaccentsoft}]%
+      {\color{rzaccent}\textbf{\rzpencil\rzgap #1}}\hspace{0.8em}%
+      #2
+    \end{tcolorbox}%
+  \fi
+}
+
+% \DeclareCommenter{\JD}{JD} creates \JD{...} as a short form for a labelled
+% block comment. Keep declarations in the assignment source rather than the
+% public theme, since reviewer names vary by course and group.
+\NewDocumentCommand{\DeclareCommenter}{m m}{%
+  \NewDocumentCommand{#1}{+m}{\HomeworkComment[#2]{##1}}%
+}
+
+% TODO text remains part of the final prose but loses its draft marker.
+% HIDDEN content is editorial-only and never reaches the document.
+\NewDocumentCommand{\TODO}{m}{%
+  \ifrz@comments
+    {\color{rzwarning}\textbf{[TODO] #1}}%
+  \else
+    #1%
+  \fi
+}
+\NewDocumentCommand{\HIDDEN}{+m}{}
+
+% Common prose shorthands retained from the course typesetting file.
+\NewDocumentCommand{\ie}{}{\textit{i.e.,}\xspace}
+\NewDocumentCommand{\eg}{}{\textit{e.g.,}\xspace}
+\NewDocumentCommand{\etal}{}{\textit{et al.}\xspace}
+\NewDocumentCommand{\benchname}{m}{\emph{#1}}
+\NewDocumentCommand{\powerset}{m}{\mathbb{P}(#1)}
+\NewDocumentCommand{\bul}{m}{\textbf{\underline{#1}:}}
+
+% Accessible replacements for the pifont check and cross commands.
+\ProvideDocumentCommand{\cmark}{}{{\color{rzsuccess}\rzcheck}}
+\ProvideDocumentCommand{\xmark}{}{{\color{rzerror}\rzcross}}
+\ProvideDocumentCommand{\chk}{}{{\color{rzsuccess}\rzcheck}}
+\ProvideDocumentCommand{\ex}{}{{\color{rzerror}\rzcross}}
+\NewDocumentCommand{\better}{m}{{\color{rzsuccess}\rzcheck\rzgap #1}\xspace}
+\NewDocumentCommand{\worse}{m}{{\color{rzerror}\rzcross\rzgap #1}\xspace}
+
+% Compact description lists for definitions and research questions. These
+% preserve the source environment names without replacing the template's
+% global list geometry.
+\NewDocumentEnvironment{smalldescription}{}{%
+  \begin{description}%
+    \setlength{\itemsep}{0pt}%
+    \setlength{\parsep}{0pt}%
+    \setlength{\topsep}{0pt}%
+}{%
+  \end{description}%
+}
+\NewDocumentEnvironment{smalldescriptionrq}{}{%
+  \begin{smalldescription}%
+}{%
+  \end{smalldescription}%
+}
+\NewDocumentEnvironment{RQList}{}{%
+  \begin{smalldescription}%
+}{%
+  \end{smalldescription}%
+}
+
+\NewDocumentCommand{\stacktwo}{m m m m m}{%
+  \mathord{\hbox{%
+    \raisebox{#2}{\rlap{#1}}%
+    \raisebox{#4}{\rlap{#3}}%
+    \hphantom{#5}%
+  }}%
+}
+\NewDocumentCommand{\xblnot}{}{%
+  \stacktwo{$\vee$}{.18ex}{$\cap$}{-.22ex}{$-$}%
+}
